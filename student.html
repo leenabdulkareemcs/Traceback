@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Traceback — Your Learning Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --surface: #ffffff;
+    --surface2: #f0ede6;
+    --border: #e0dbd0;
+    --text: #1a1814;
+    --muted: #8a8478;
+    --accent: #1a1814;
+    --on-track: #2d6a4f;
+    --needs-support: #1d4ed8;
+    --declining: #b45309;
+    --exam-anxiety: #6d28d9;
+    --knowledge-gap: #c2410c;
+    --no-engagement: #b91c1c;
+    --low: #2d6a4f;
+    --medium: #b45309;
+    --high: #c2410c;
+    --critical: #b91c1c;
+    --mono: 'DM Mono', monospace;
+    --serif: 'Lora', serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+  }
+
+  /* ── SUBTLE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.02'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── HEADER ── */
+  header {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-mark {
+    width: 32px; height: 32px;
+    background: var(--text);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--bg);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-name {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  .header-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* ── LOGIN SCREEN ── */
+  #login-screen {
+    min-height: calc(100vh - 81px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+  }
+
+  .login-box {
+    width: 100%;
+    max-width: 440px;
+    text-align: center;
+  }
+
+  .login-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .login-title {
+    font-family: var(--serif);
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+  }
+
+  .login-title em {
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .login-sub {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 40px;
+  }
+
+  .login-field {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+
+  .login-field:focus-within {
+    border-color: var(--text);
+  }
+
+  .field-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  .field-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: var(--mono);
+    font-size: 15px;
+    color: var(--text);
+    outline: none;
+  }
+
+  .field-input::placeholder { color: var(--border); }
+
+  .login-btn {
+    width: 100%;
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    margin-bottom: 24px;
+    letter-spacing: 0.3px;
+  }
+
+  .login-btn:hover { opacity: 0.85; }
+  .login-btn:active { transform: scale(0.99); }
+
+  .sample-hint {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .sample-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  .chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text);
+  }
+
+  .chip:hover {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+
+  .error-msg {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--no-engagement);
+    margin-bottom: 12px;
+    text-align: left;
+    display: none;
+  }
+
+  /* ── PROFILE SCREEN ── */
+  #profile-screen {
+    display: none;
+    padding: 48px 0 80px;
+    animation: fadeIn 0.5s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── GREETING ── */
+  .greeting {
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .greeting-time {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .greeting-title {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .greeting-sub {
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  .logout-btn {
+    float: right;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 4px;
+  }
+
+  .logout-btn:hover {
+    border-color: var(--text);
+    color: var(--text);
+  }
+
+  /* ── SECTION ── */
+  .section { margin-bottom: 40px; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── DIAGNOSIS CARD ── */
+  .diagnosis-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .diagnosis-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+
+  .urgency-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .urgency-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+
+  .urgency-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+
+  .rc-title {
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .rc-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 16px;
+  }
+
+  .diagnosis-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  /* ── SIGNAL GRID ── */
+  .signal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .signal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    transition: border-color 0.2s;
+  }
+
+  .signal-card:hover { border-color: var(--text); }
+
+  .signal-name {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .signal-val {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .signal-desc {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* ── RISK SECTION ── */
+  .risk-stack { display: flex; flex-direction: column; gap: 16px; }
+
+  .risk-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+
+  .risk-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+
+  .risk-name {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .risk-score {
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  .risk-bar-track {
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .risk-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0;
+  }
+
+  .risk-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── PLAN ── */
+  .plan-stack { display: flex; flex-direction: column; gap: 0; }
+
+  .plan-step {
+    display: flex;
+    gap: 20px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+    animation: fadeIn 0.4s ease both;
+  }
+
+  .plan-step:last-child { border-bottom: none; }
+  .plan-step:nth-child(1) { animation-delay: 0.1s; }
+  .plan-step:nth-child(2) { animation-delay: 0.2s; }
+  .plan-step:nth-child(3) { animation-delay: 0.3s; }
+  .plan-step:nth-child(4) { animation-delay: 0.4s; }
+
+  .step-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding-top: 2px;
+  }
+
+  .step-circle {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+    background: var(--surface);
+  }
+
+  .step-line {
+    width: 1px;
+    flex: 1;
+    min-height: 20px;
+    background: var(--border);
+  }
+
+  .plan-step:last-child .step-line { display: none; }
+
+  .step-right { flex: 1; }
+
+  .step-type-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .step-action {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    letter-spacing: -0.3px;
+  }
+
+  .step-why {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  .step-meta {
+    display: flex;
+    gap: 16px;
+  }
+
+  .step-time {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text);
+    background: var(--surface2);
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+
+  /* ── ENCOURAGEMENT ── */
+  .encouragement-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    text-align: center;
+  }
+
+  .enc-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+
+  .enc-text {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--text);
+    max-width: 480px;
+    margin: 0 auto 16px;
+  }
+
+  .enc-sig {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+
+  /* ── FOOTER ── */
+  .profile-footer {
+    text-align: center;
+    padding: 32px 0 0;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+
+  .footer-logo {
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .footer-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--border);
+    letter-spacing: 2px;
+  }
+
+  @media (max-width: 600px) {
+    .signal-grid { grid-template-columns: repeat(2, 1fr); }
+    .login-title { font-size: 28px; }
+    .greeting-title { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="logo">
+      <div class="logo-mark">TB</div>
+      <div class="logo-name">Traceback</div>
+    </div>
+    <div class="header-label">STUDENT PORTAL</div>
+  </div>
+</header>
+
+<!-- ══════════════════ LOGIN -->
+<div id="login-screen">
+  <div class="wrap">
+    <div class="login-box">
+      <div class="login-eyebrow">Welcome to Traceback</div>
+      <h1 class="login-title">Understand <em>why</em><br>you're struggling.</h1>
+      <p class="login-sub">Enter your student ID to see your personal diagnosis, risk analysis, and a step-by-step learning plan built just for you.</p>
+
+      <div id="error-msg" class="error-msg">
+        Student ID not found. Please try one of the sample IDs below.
+      </div>
+
+      <div class="login-field">
+        <span class="field-label">ID</span>
+        <input class="field-input" id="id-input" type="text"
+               placeholder="e.g. 125535"
+               onkeydown="if(event.key==='Enter') login()">
+      </div>
+
+      <button class="login-btn" onclick="login()">View My Profile →</button>
+
+      <p class="sample-hint">Don't have an ID? Try a sample student:</p>
+      <div class="sample-chips">
+        <span class="chip" onclick="tryId('125535')" title="NO_ENGAGEMENT">125535</span>
+        <span class="chip" onclick="tryId('623831')" title="DECLINING">623831</span>
+        <span class="chip" onclick="tryId('566133')" title="EXAM_ANXIETY">566133</span>
+        <span class="chip" onclick="tryId('697492')" title="NEEDS_SUPPORT">697492</span>
+        <span class="chip" onclick="tryId('565513')" title="ON_TRACK">565513</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ PROFILE -->
+<div id="profile-screen">
+  <div class="wrap">
+
+    <div class="greeting" id="greeting-section">
+      <button class="logout-btn" onclick="logout()">← Back</button>
+      <div class="greeting-time" id="greeting-time"></div>
+      <h2 class="greeting-title" id="greeting-title"></h2>
+      <p class="greeting-sub" id="greeting-sub"></p>
+    </div>
+
+    <!-- DIAGNOSIS -->
+    <div class="section">
+      <div class="section-label">01 — Diagnosis</div>
+      <div class="diagnosis-card" id="diagnosis-card">
+        <div class="urgency-row">
+          <div class="urgency-pill" id="urgency-pill">
+            <div class="urgency-dot" id="urgency-dot"></div>
+            <span id="urgency-text"></span>
+          </div>
+        </div>
+        <div class="rc-title" id="rc-title"></div>
+        <div class="rc-subtitle" id="rc-subtitle"></div>
+        <div class="diagnosis-text" id="diagnosis-text"></div>
+      </div>
+    </div>
+
+    <!-- SIGNALS -->
+    <div class="section">
+      <div class="section-label">02 — Your Signals</div>
+      <div class="signal-grid" id="signal-grid"></div>
+    </div>
+
+    <!-- RISK -->
+    <div class="section">
+      <div class="section-label">03 — Risk Analysis</div>
+      <div class="risk-stack" id="risk-stack"></div>
+    </div>
+
+    <!-- PLAN -->
+    <div class="section">
+      <div class="section-label">04 — Your Learning Plan</div>
+      <div class="plan-stack" id="plan-stack"></div>
+    </div>
+
+    <!-- ENCOURAGEMENT -->
+    <div class="section">
+      <div class="section-label">05 — A Note For You</div>
+      <div class="encouragement-card">
+        <div class="enc-icon">💬</div>
+        <div class="enc-text" id="enc-text"></div>
+        <div class="enc-sig">— TRACEBACK SYSTEM</div>
+      </div>
+    </div>
+
+    <div class="profile-footer">
+      <div class="footer-logo">Traceback</div>
+      <div class="footer-sub">STUDENT INTELLIGENCE SYSTEM</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── STUDENTS DATA ────────────────────────────────────────
+const STUDENTS = {
+  '125535': {
+    id:'125535', module:'BBB', result:'Pass', education:'A Level or Equivalent',
+    avg_score:38.2, trend_label:'improving', late_submissions:1,
+    total_clicks:3, num_of_prev_attempts:2, engagement_level:'very_low',
+    academic_risk:0.37, engagement_risk:0.99, persistence_risk:0.19,
+    root_cause:'NO_ENGAGEMENT', tma_avg_score:38.2, cma_avg_score:38.2, score_std:5.1
+  },
+  '623831': {
+    id:'623831', module:'GGG', result:'Distinction', education:'A Level or Equivalent',
+    avg_score:63.7, trend_label:'declining', late_submissions:0,
+    total_clicks:10, num_of_prev_attempts:0, engagement_level:'low',
+    academic_risk:0.55, engagement_risk:0.89, persistence_risk:0.00,
+    root_cause:'DECLINING', tma_avg_score:63.7, cma_avg_score:63.7, score_std:8.2
+  },
+  '566133': {
+    id:'566133', module:'BBB', result:'Distinction', education:'A Level or Equivalent',
+    avg_score:84.0, trend_label:'stable', late_submissions:0,
+    total_clicks:1, num_of_prev_attempts:0, engagement_level:'very_low',
+    academic_risk:0.12, engagement_risk:0.97, persistence_risk:0.00,
+    root_cause:'EXAM_ANXIETY', tma_avg_score:74.0, cma_avg_score:96.0, score_std:11.0
+  },
+  '697492': {
+    id:'697492', module:'GGG', result:'Distinction', education:'Lower Than A Level',
+    avg_score:66.4, trend_label:'stable', late_submissions:0,
+    total_clicks:6, num_of_prev_attempts:0, engagement_level:'very_low',
+    academic_risk:0.44, engagement_risk:0.99, persistence_risk:0.00,
+    root_cause:'NEEDS_SUPPORT', tma_avg_score:66.4, cma_avg_score:66.4, score_std:6.3
+  },
+  '565513': {
+    id:'565513', module:'BBB', result:'Distinction', education:'A Level or Equivalent',
+    avg_score:93.3, trend_label:'stable', late_submissions:0,
+    total_clicks:13, num_of_prev_attempts:0, engagement_level:'low',
+    academic_risk:0.09, engagement_risk:0.98, persistence_risk:0.00,
+    root_cause:'ON_TRACK', tma_avg_score:93.3, cma_avg_score:93.3, score_std:3.1
+  }
+};
+
+// ── ROOT CAUSE CONFIG ────────────────────────────────────
+const RC_CONFIG = {
+  NO_ENGAGEMENT: {
+    color: '#b91c1c',
+    label: 'No Engagement',
+    subtitle: 'The issue is attendance, not ability.',
+  },
+  DECLINING: {
+    color: '#b45309',
+    label: 'Declining Performance',
+    subtitle: 'Something changed. Let\'s find out what.',
+  },
+  EXAM_ANXIETY: {
+    color: '#6d28d9',
+    label: 'Assessment Anxiety',
+    subtitle: 'You know the material. The format is the problem.',
+  },
+  NEEDS_SUPPORT: {
+    color: '#1d4ed8',
+    label: 'Needs Targeted Support',
+    subtitle: 'You\'re close. A focused push will get you there.',
+  },
+  KNOWLEDGE_GAP: {
+    color: '#c2410c',
+    label: 'Knowledge Gap',
+    subtitle: 'The effort is there. The foundation needs work.',
+  },
+  ON_TRACK: {
+    color: '#2d6a4f',
+    label: 'On Track',
+    subtitle: 'Keep going. You\'re doing well.',
+  }
+};
+
+const URGENCY_CONFIG = {
+  CRITICAL: { color: '#b91c1c', bg: '#fef2f2', label: 'CRITICAL' },
+  HIGH:     { color: '#c2410c', bg: '#fff7ed', label: 'HIGH PRIORITY' },
+  MEDIUM:   { color: '#b45309', bg: '#fffbeb', label: 'MEDIUM PRIORITY' },
+  LOW:      { color: '#2d6a4f', bg: '#f0fdf4', label: 'ON TRACK' },
+};
+
+// ── PLAN GENERATOR ───────────────────────────────────────
+function generatePlan(s) {
+  const rc = s.root_cause;
+  const score = s.avg_score.toFixed(1);
+  const clicks = Math.round(s.total_clicks);
+  const late = Math.round(s.late_submissions);
+  const prev = Math.round(s.num_of_prev_attempts);
+  const tma = s.tma_avg_score.toFixed(1);
+  const cma = s.cma_avg_score.toFixed(1);
+  const gap = Math.abs(s.tma_avg_score - s.cma_avg_score).toFixed(1);
+  const better = s.tma_avg_score > s.cma_avg_score ? 'TMA' : 'CMA';
+  const worse = better === 'TMA' ? 'CMA' : 'TMA';
+  const betterVal = Math.max(s.tma_avg_score, s.cma_avg_score).toFixed(1);
+
+  const plans = {
+    NO_ENGAGEMENT: {
+      urgency: 'CRITICAL',
+      diagnosis: `Your data shows only ${clicks} interactions with the platform and an average score of ${score}. This tells us something important — this isn't a question of ability. You haven't had the chance to engage with the material yet. That's the starting point.`,
+      steps: [
+        { type:'HABIT', action:'Log in every single day for 7 days', why:'Building the habit of showing up is the first step. Even 10 minutes counts more than nothing.', time:'10 min/day' },
+        { type:'CONTENT', action:`Watch all intro videos for module ${s.module}`, why:'You are missing the foundational context that other students have. Start from the beginning — no shame in that.', time:'1–2 hours' },
+        { type:'ASSESSMENT', action:'Submit your next assignment — any score is fine', why:'A submitted assignment with 40% beats a missing one with 0%. Showing up matters.', time:'2–3 hours' },
+        { type:'SUPPORT', action:'Contact your module tutor this week', why:'Let them know you are re-engaging. Tutors can unlock extensions and extra support for students who reach out.', time:'15 min' }
+      ],
+      encouragement: `It is not too late to turn this around. Students who re-engage at this stage can still pass module ${s.module}. The first step is always the hardest one.`
+    },
+    DECLINING: {
+      urgency: 'HIGH',
+      diagnosis: `Your scores have been declining over time — currently averaging ${score}. You have ${late} late submission(s). Something shifted recently. It might be workload, motivation, or something personal. Whatever it is, it's worth finding and naming.`,
+      steps: [
+        { type:'REFLECTION', action:'Write down everything that changed 4–6 weeks ago', why:'Declining performance always has a cause. Identifying it honestly is the first step to fixing it.', time:'15 min' },
+        { type:'REVIEW', action:'Review your last 3 assessments and find the pattern', why:'Are you making the same mistake repeatedly? Or completely different ones each time? The pattern tells you what to fix.', time:'1 hour' },
+        { type:'ASSESSMENT', action:'Submit any overdue work — even partially complete', why:`You have ${late} late submission(s). Partial credit is better than zero. Don't let perfect be the enemy of done.`, time:'2–4 hours' },
+        { type:'SUPPORT', action:'Talk to your personal tutor about what changed', why:'Universities have support systems built for exactly this situation. You don\'t have to figure this out alone.', time:'30 min' }
+      ],
+      encouragement: `A declining trend is a warning, not a verdict. Your earlier performance shows you are capable of this work. Something disrupted you — let's find it and fix it together.`
+    },
+    EXAM_ANXIETY: {
+      urgency: 'MEDIUM',
+      diagnosis: `Your ${better} average is ${betterVal} — genuinely strong. But your ${worse} average is ${Math.min(s.tma_avg_score, s.cma_avg_score).toFixed(1)}, a gap of ${gap} points. You clearly understand the material. The problem is performance under formal conditions, not knowledge.`,
+      steps: [
+        { type:'PRACTICE', action:`Complete 3 timed practice ${worse}s under real conditions`, why:'Assessment anxiety comes from the unfamiliarity of the format. Exposure reduces it significantly.', time:'3 hours' },
+        { type:'TECHNIQUE', action:'Use the "brain dump" in the first 5 minutes of every exam', why:'Write everything you know about the topic before reading the questions. It clears anxiety and activates memory.', time:'5 min per exam' },
+        { type:'REVIEW', action:'Study past papers and mark your own answers', why:'Understanding exactly what the marker wants removes the uncertainty that feeds anxiety.', time:'2 hours' },
+        { type:'SUPPORT', action:'Ask student services about exam accommodations', why:'Extra time and quiet rooms exist for students who need them. It is always worth asking.', time:'20 min' }
+      ],
+      encouragement: `Your ${better} score of ${betterVal} is proof that you know this material deeply. This is a performance-under-pressure issue — and that is one of the most fixable problems there is.`
+    },
+    NEEDS_SUPPORT: {
+      urgency: 'MEDIUM',
+      diagnosis: `Your average score is ${score} — consistently near but just below the passing threshold. Your trend is ${s.trend_label}. You are doing the work. You understand most of the material. You just need a targeted push in the right direction.`,
+      steps: [
+        { type:'FOCUS', action:'Spend 80% of study time on your 2 weakest topics', why:'You are close to the threshold. Small, targeted improvements in weak areas will move your average over the line.', time:'3–4 hours' },
+        { type:'HABIT', action:'Aim for daily platform logins, even briefly', why:`Your current engagement is ${clicks} clicks. Students who pass average 3x more interactions than that.`, time:'20 min/day' },
+        { type:'COLLABORATION', action:'Join or start a study group for this module', why:'Explaining concepts to others is the fastest way to solidify your own understanding.', time:'2 hours/week' },
+        { type:'HABIT', action:'Submit all assignments at least 2 days early', why:'Early submissions give you time to revise if needed, and signal commitment to your tutor.', time:'Ongoing' }
+      ],
+      encouragement: `You are closer than you think. A score of ${score} means you understand most of this material already. A few focused weeks is all that stands between you and passing.`
+    },
+    KNOWLEDGE_GAP: {
+      urgency: 'HIGH',
+      diagnosis: `You are engaging with the platform (${clicks} interactions) but your average score is ${score}. You have attempted this module ${prev} time(s) before. This pattern tells us something specific — the effort is there, but a foundational concept is missing somewhere underneath.`,
+      steps: [
+        { type:'DIAGNOSIS', action:'Identify the exact topic where your scores are lowest', why:'You cannot fix a gap you haven\'t located. Look at individual assessment breakdowns first.', time:'20 min' },
+        { type:'REVIEW', action:'Go back one module and review the prerequisites', why:`With ${prev} previous attempt(s), the gap likely started before this module. Find where it began.`, time:'3–4 hours' },
+        { type:'PRACTICE', action:"Don't move forward until the weak topic reaches 70%+", why:'Building on a shaky foundation makes everything harder. Fix the base before adding more on top.', time:'1 week' },
+        { type:'SUPPORT', action:'Request a 1-on-1 tutorial session', why:'Some gaps need a human explanation. One session can unlock weeks of confusion.', time:'1 hour' }
+      ],
+      encouragement: `You are clearly trying — ${clicks} interactions shows real, consistent effort. The issue isn't effort. It's direction. Once you find and fix the root gap, your score will move quickly.`
+    },
+    ON_TRACK: {
+      urgency: 'LOW',
+      diagnosis: `Your average score is ${score} with a ${s.trend_label} trajectory. You are performing well and on track for ${s.result}. The data shows consistent engagement and strong assessment results. The goal now is to maintain this and push higher.`,
+      steps: [
+        { type:'HABIT', action:'Keep your current study routine — it is working', why:'Consistency at this level is the difference between Pass and Distinction. Don\'t fix what isn\'t broken.', time:'Ongoing' },
+        { type:'CHALLENGE', action:'Seek out harder practice questions beyond the syllabus', why:'Staying in your comfort zone keeps you at the same level. Growth requires deliberate difficulty.', time:'1 hour/week' },
+        { type:'COLLABORATION', action:'Help a struggling peer in your module', why:'Teaching others is the deepest form of learning. It also builds your academic network.', time:'1 hour/week' },
+        { type:'REFLECTION', action:'Analyze your highest-scoring work — understand what made it good', why:'Replicating your best performance consistently is what separates a Pass from a Distinction.', time:'30 min' }
+      ],
+      encouragement: `A score of ${score} shows real mastery of this material. You have built something solid. The question now is how high you want to go.`
+    }
+  };
+
+  return plans[rc] || plans['ON_TRACK'];
+}
+
+// ── GREETING ─────────────────────────────────────────────
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
+// ── LOGIN ─────────────────────────────────────────────────
+function tryId(id) {
+  document.getElementById('id-input').value = id;
+  login();
+}
+
+function login() {
+  const id = document.getElementById('id-input').value.trim();
+  const err = document.getElementById('error-msg');
+  err.style.display = 'none';
+
+  const s = STUDENTS[id];
+  if (!s) {
+    err.style.display = 'block';
+    return;
+  }
+
+  renderProfile(s);
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('profile-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function logout() {
+  document.getElementById('profile-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('id-input').value = '';
+  document.getElementById('error-msg').style.display = 'none';
+  window.scrollTo(0, 0);
+}
+
+// ── RENDER PROFILE ───────────────────────────────────────
+function renderProfile(s) {
+  const plan = generatePlan(s);
+  const rc = RC_CONFIG[s.root_cause];
+  const urg = URGENCY_CONFIG[plan.urgency];
+
+  // Greeting
+  document.getElementById('greeting-time').textContent = getGreeting();
+  document.getElementById('greeting-title').textContent = `Student ${s.id} — Module ${s.module}`;
+  document.getElementById('greeting-sub').textContent =
+    `${s.education} · Final result: ${s.result} · Engagement: ${s.engagement_level}`;
+
+  // Diagnosis card
+  const card = document.getElementById('diagnosis-card');
+  card.style.borderColor = rc.color + '40';
+  card.querySelector('::before');
+  card.style.setProperty('--card-accent', rc.color);
+
+  // Add top border color via inline style on ::before simulation
+  card.style.background = `linear-gradient(${rc.color}, ${rc.color}) top/100% 4px no-repeat, white`;
+
+  const pill = document.getElementById('urgency-pill');
+  pill.style.background = urg.bg;
+  pill.style.color = urg.color;
+  pill.style.border = `1px solid ${urg.color}33`;
+  document.getElementById('urgency-dot').style.background = urg.color;
+  document.getElementById('urgency-text').textContent = urg.label;
+
+  document.getElementById('rc-title').textContent = rc.label;
+  document.getElementById('rc-title').style.color = rc.color;
+  document.getElementById('rc-subtitle').textContent = rc.subtitle;
+  document.getElementById('diagnosis-text').textContent = plan.diagnosis;
+
+  // Signals
+  const trendColor = s.trend_label === 'improving' ? '#2d6a4f' :
+                     s.trend_label === 'declining' ? '#b91c1c' : '#b45309';
+  const scoreColor = s.avg_score >= 70 ? '#2d6a4f' :
+                     s.avg_score >= 50 ? '#b45309' : '#b91c1c';
+
+  const signals = [
+    { name: 'Avg Score', val: s.avg_score.toFixed(1), desc: 'out of 100', color: scoreColor },
+    { name: 'Score Trend', val: s.trend_label, desc: 'over time', color: trendColor },
+    { name: 'VLE Clicks', val: Math.round(s.total_clicks), desc: 'platform interactions', color: '#1a1814' },
+    { name: 'Late Subs', val: Math.round(s.late_submissions), desc: 'late submissions', color: Math.round(s.late_submissions) > 0 ? '#b91c1c' : '#2d6a4f' },
+    { name: 'Prev Attempts', val: Math.round(s.num_of_prev_attempts), desc: 'times retaken', color: '#1a1814' },
+    { name: 'Score Spread', val: s.score_std.toFixed(1), desc: 'std deviation', color: '#1a1814' },
+  ];
+
+  document.getElementById('signal-grid').innerHTML = signals.map(sig => `
+    <div class="signal-card">
+      <div class="signal-name">${sig.name}</div>
+      <div class="signal-val" style="color:${sig.color}">${sig.val}</div>
+      <div class="signal-desc">${sig.desc}</div>
+    </div>
+  `).join('');
+
+  // Risk
+  const risks = [
+    {
+      key: 'academic_risk',
+      name: 'Academic Risk',
+      val: s.academic_risk,
+      desc: 'Measures how far your scores are from the expected level. Combines avg score, trend, and consistency.',
+      color: s.academic_risk > 0.6 ? '#b91c1c' : s.academic_risk > 0.35 ? '#b45309' : '#2d6a4f'
+    },
+    {
+      key: 'engagement_risk',
+      name: 'Engagement Risk',
+      val: s.engagement_risk,
+      desc: 'Measures how disconnected you are from the platform. High engagement risk means low interaction with materials.',
+      color: s.engagement_risk > 0.8 ? '#b91c1c' : s.engagement_risk > 0.5 ? '#b45309' : '#2d6a4f'
+    },
+    {
+      key: 'persistence_risk',
+      name: 'Persistence Risk',
+      val: s.persistence_risk,
+      desc: 'Measures patterns of repeated difficulty — previous attempts, late submissions, and dropout signals.',
+      color: s.persistence_risk > 0.3 ? '#b91c1c' : s.persistence_risk > 0.1 ? '#b45309' : '#2d6a4f'
+    }
+  ];
+
+  document.getElementById('risk-stack').innerHTML = risks.map(r => `
+    <div class="risk-item">
+      <div class="risk-header">
+        <div class="risk-name">${r.name}</div>
+        <div class="risk-score" style="color:${r.color}">${r.val.toFixed(2)} / 1.00</div>
+      </div>
+      <div class="risk-bar-track">
+        <div class="risk-bar-fill" id="rb-${r.key}"
+             style="background:${r.color};width:0%"
+             data-width="${(r.val*100).toFixed(1)}"></div>
+      </div>
+      <div class="risk-desc">${r.desc}</div>
+    </div>
+  `).join('');
+
+  // Plan
+  document.getElementById('plan-stack').innerHTML = plan.steps.map((step, i) => `
+    <div class="plan-step">
+      <div class="step-left">
+        <div class="step-circle" style="border-color:${rc.color};color:${rc.color}">${i+1}</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-right">
+        <div class="step-type-tag">${step.type}</div>
+        <div class="step-action">${step.action}</div>
+        <div class="step-why">${step.why}</div>
+        <div class="step-meta">
+          <span class="step-time">⏱ ${step.time}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Encouragement
+  document.getElementById('enc-text').textContent = plan.encouragement;
+
+  // Animate risk bars
+  setTimeout(() => {
+    document.querySelectorAll('.risk-bar-fill').forEach(el => {
+      el.style.width = el.dataset.width + '%';
+    });
+  }, 300);
+}
+</script>
+</body>
+</html>
