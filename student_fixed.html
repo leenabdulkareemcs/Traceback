@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Traceback — Student Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --surface: #ffffff;
+    --surface2: #f0ede6;
+    --border: #e0dbd0;
+    --text: #1a1814;
+    --muted: #8a8478;
+    --sidebar-bg: #0d0f0e;
+    --sidebar-border: #1c201c;
+    --green: #00e676;
+    --green-dim: #00e67615;
+    --mono: 'DM Mono', monospace;
+    --serif: 'Lora', serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--sans); background: var(--bg); display: flex; height: 100vh; overflow: hidden; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 220px; background: var(--sidebar-bg);
+    display: flex; flex-direction: column;
+    padding: 24px 0; flex-shrink: 0;
+    border-right: 1px solid var(--sidebar-border);
+  }
+  .sidebar-logo {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 20px 28px;
+    border-bottom: 1px solid var(--sidebar-border);
+    margin-bottom: 16px;
+  }
+  .logo-mark {
+    width: 32px; height: 32px; background: var(--green);
+    clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 11px; color: #000; flex-shrink: 0;
+  }
+  .logo-text { font-family: var(--mono); font-size: 15px; color: #e8f0ea; letter-spacing: -0.3px; }
+  .logo-text span { color: var(--green); }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 20px; cursor: pointer; transition: all 0.15s;
+    border-left: 2px solid transparent; margin: 1px 0;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.04); }
+  .nav-item.active { background: var(--green-dim); border-left-color: var(--green); }
+  .nav-icon { font-size: 15px; width: 20px; text-align: center; }
+  .nav-label { font-size: 13px; color: #6a7a6e; font-weight: 500; transition: color 0.15s; }
+  .nav-item.active .nav-label, .nav-item:hover .nav-label { color: #e8f0ea; }
+  .nav-item.active .nav-label { color: var(--green); }
+
+  .sidebar-footer {
+    margin-top: auto; padding: 16px 20px;
+    border-top: 1px solid var(--sidebar-border);
+  }
+  .student-info { display: flex; align-items: center; gap: 10px; }
+  .student-avatar {
+    width: 32px; height: 32px; background: var(--sidebar-border);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;
+  }
+  .student-name { font-size: 12px; color: #6a7a6e; font-family: var(--mono); }
+  .student-id-label { font-size: 11px; color: #3a4a3e; font-family: var(--mono); }
+
+  /* ── MAIN ── */
+  .main { flex: 1; overflow-y: auto; padding: 40px 48px; }
+  .page-section { display: none; }
+  .page-section.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .page-header { margin-bottom: 32px; }
+  .page-eyebrow {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 3px;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 6px;
+  }
+  .page-title {
+    font-family: var(--serif); font-size: 28px; font-weight: 600;
+    letter-spacing: -0.8px; color: var(--text); margin-bottom: 6px;
+  }
+  .page-sub { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+  /* ── UPLOAD ZONE ── */
+  .upload-zone {
+    border: 2px dashed var(--border); border-radius: 16px;
+    padding: 56px 32px; text-align: center; cursor: pointer;
+    transition: all 0.2s; background: var(--surface);
+    margin-bottom: 24px; position: relative;
+  }
+  .upload-zone:hover, .upload-zone.drag-over { border-color: var(--text); background: var(--surface2); }
+  .upload-zone input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+  .upload-icon { font-size: 40px; margin-bottom: 16px; }
+  .upload-title { font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .upload-sub { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+  .upload-types { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .type-chip {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 12px;
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+  }
+
+  /* ── FILE PREVIEW ── */
+  .file-preview {
+    display: none; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 20px; margin-bottom: 24px;
+    align-items: center; gap: 14px;
+  }
+  .file-preview.visible { display: flex; }
+  .file-icon-wrap {
+    width: 44px; height: 44px; background: var(--surface2);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .file-info { flex: 1; }
+  .file-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .file-size { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .file-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 18px; padding: 4px; transition: color 0.2s; }
+  .file-remove:hover { color: #b91c1c; }
+
+  /* ── INPUTS ── */
+  .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .input-group label {
+    display: block; font-family: var(--mono); font-size: 10px;
+    letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px;
+  }
+  .input-group input, .input-group select {
+    width: 100%; background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 12px 16px; font-family: var(--sans);
+    font-size: 14px; color: var(--text); outline: none; transition: border-color 0.2s; appearance: none;
+  }
+  .input-group input:focus, .input-group select:focus { border-color: var(--text); }
+
+  /* ── BUTTONS ── */
+  .analyse-btn {
+    width: 100%; background: var(--text); color: var(--bg);
+    border: none; border-radius: 12px; padding: 16px;
+    font-family: var(--sans); font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .analyse-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+  .analyse-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .new-upload-btn {
+    background: none; border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 8px 16px; font-family: var(--mono); font-size: 11px;
+    color: var(--muted); cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px;
+  }
+  .new-upload-btn:hover { border-color: var(--text); color: var(--text); }
+
+  /* ── LOADING ── */
+  .loading-state { display: none; text-align: center; padding: 60px 20px; }
+  .loading-state.visible { display: block; }
+  .loading-spinner {
+    width: 48px; height: 48px; border: 3px solid var(--border);
+    border-top-color: var(--text); border-radius: 50%;
+    animation: spin 0.8s linear infinite; margin: 0 auto 20px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-title { font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .loading-steps { display: flex; flex-direction: column; gap: 8px; max-width: 320px; margin: 24px auto 0; text-align: left; }
+  .loading-step { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); opacity: 0.3; transition: opacity 0.4s; }
+  .loading-step.done { opacity: 1; color: var(--text); }
+  .loading-step.active { opacity: 1; color: var(--text); }
+  .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); flex-shrink: 0; transition: background 0.3s; }
+  .loading-step.done .step-dot { background: #2d6a4f; }
+  .loading-step.active .step-dot { background: var(--text); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.4)} }
+
+  /* ── RESULTS ── */
+  .diagnosis-banner { border-radius: 14px; padding: 24px 28px; margin-bottom: 20px; }
+  .diag-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; opacity: 0.7; }
+  .diag-title { font-family: var(--serif); font-size: 26px; font-weight: 600; margin-bottom: 10px; line-height: 1.2; }
+  .diag-text { font-size: 14px; line-height: 1.7; opacity: 0.85; }
+
+  .section-title { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 14px; margin-top: 24px; }
+
+  .error-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 8px; }
+  .error-tile { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; transition: border-color 0.2s; }
+  .error-tile.highlight { border-color: var(--text); }
+  .error-pct { font-family: var(--mono); font-size: 28px; font-weight: 500; line-height: 1; margin-bottom: 6px; }
+  .error-name { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+  .error-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+  .topics-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+  .topic-row { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; }
+  .topic-rank { font-family: var(--mono); font-size: 11px; color: var(--muted); width: 20px; flex-shrink: 0; }
+  .topic-name { font-size: 14px; font-weight: 600; flex: 1; }
+  .topic-bar-wrap { width: 120px; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
+  .topic-bar { height: 100%; border-radius: 3px; transition: width 1s ease; width: 0; }
+  .topic-label { font-family: var(--mono); font-size: 11px; width: 60px; text-align: right; flex-shrink: 0; }
+
+  .plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px; }
+  .plan-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; border-left: 3px solid var(--text); }
+  .plan-step-num { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 2px; margin-bottom: 6px; }
+  .plan-type { display: inline-block; font-family: var(--mono); font-size: 9px; letter-spacing: 1px; padding: 2px 8px; border-radius: 3px; background: var(--surface2); color: var(--muted); margin-bottom: 8px; }
+  .plan-action { font-size: 14px; font-weight: 600; margin-bottom: 6px; line-height: 1.4; }
+  .plan-why { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 8px; }
+  .plan-time { font-family: var(--mono); font-size: 10px; color: var(--text); }
+
+  .enc-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid #2d6a4f; border-radius: 0 12px 12px 0; padding: 20px 24px; margin-top: 20px; font-family: var(--serif); font-size: 16px; font-style: italic; line-height: 1.7; color: var(--text); }
+
+  /* ── HISTORY ── */
+  .empty-state { text-align: center; padding: 80px 20px; color: var(--muted); }
+  .empty-state-icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-state h3 { font-family: var(--serif); font-size: 22px; color: var(--text); margin-bottom: 8px; }
+
+  .history-list { display: flex; flex-direction: column; gap: 12px; }
+  .history-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; cursor: pointer; transition: border-color 0.2s; display: flex; align-items: center; gap: 20px; }
+  .history-card:hover { border-color: var(--text); }
+  .history-date { font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap; width: 100px; flex-shrink: 0; }
+  .history-file { flex: 1; }
+  .history-filename { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .history-subject { font-size: 12px; color: var(--muted); }
+  .history-rc { font-family: var(--mono); font-size: 11px; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+
+  /* ── PROGRESS ── */
+  .progress-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+  .progress-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+  .compare-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .compare-label { font-size: 13px; color: var(--muted); width: 140px; flex-shrink: 0; }
+  .compare-bars { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+  .compare-bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .compare-bar-label { font-family: var(--mono); font-size: 10px; color: var(--muted); width: 32px; flex-shrink: 0; }
+  .compare-track { flex: 1; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+  .compare-fill { height: 100%; border-radius: 4px; transition: width 1s ease; width: 0; }
+  .compare-val { font-family: var(--mono); font-size: 11px; width: 36px; text-align: right; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">TB</div>
+    <div class="logo-text">Trace<span>back</span></div>
+  </div>
+  <div class="nav-item active" onclick="showPage('upload',this)">
+    <div class="nav-icon">📤</div><div class="nav-label">Upload Exam</div>
+  </div>
+  <div class="nav-item" onclick="showPage('results',this)" id="nav-results" style="display:none">
+    <div class="nav-icon">🔍</div><div class="nav-label">My Diagnosis</div>
+  </div>
+  <div class="nav-item" onclick="showPage('history',this)">
+    <div class="nav-icon">📅</div><div class="nav-label">History</div>
+  </div>
+  <div class="nav-item" onclick="showPage('progress',this)">
+    <div class="nav-icon">📈</div><div class="nav-label">Progress</div>
+  </div>
+  <div class="sidebar-footer">
+    <div class="student-info">
+      <div class="student-avatar">🎓</div>
+      <div>
+        <div class="student-name" id="sidebar-name">Student</div>
+        <div class="student-id-label" id="sidebar-id">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- UPLOAD -->
+  <div class="page-section active" id="page-upload">
+    <div class="page-header">
+      <div class="page-eyebrow">New Analysis</div>
+      <h1 class="page-title">Upload Your Exam</h1>
+      <p class="page-sub">Upload your exam or assignment and Traceback will diagnose exactly where your understanding broke down.</p>
+    </div>
+
+    <div id="upload-area">
+      <div class="upload-zone" id="upload-zone"
+           ondragover="event.preventDefault();this.classList.add('drag-over')"
+           ondragleave="this.classList.remove('drag-over')"
+           ondrop="handleDrop(event)">
+        <input type="file" id="file-input" accept=".pdf,.docx,.txt,.png,.jpg,.jpeg"
+               onchange="handleFile(this.files[0])">
+        <div class="upload-icon">📄</div>
+        <div class="upload-title">Drop your exam here</div>
+        <div class="upload-sub">or click to browse your files</div>
+        <div class="upload-types">
+          <span class="type-chip">PDF</span>
+          <span class="type-chip">DOCX</span>
+          <span class="type-chip">TXT</span>
+          <span class="type-chip">Image</span>
+        </div>
+      </div>
+
+      <div class="file-preview" id="file-preview">
+        <div class="file-icon-wrap" id="file-icon">📄</div>
+        <div class="file-info">
+          <div class="file-name" id="file-name">—</div>
+          <div class="file-size" id="file-size">—</div>
+        </div>
+        <button class="file-remove" onclick="removeFile()">✕</button>
+      </div>
+
+      <div class="input-row">
+        <div class="input-group">
+          <label>Subject / Course</label>
+          <input type="text" id="subject-input" placeholder="e.g. Data Structures, Calculus">
+        </div>
+        <div class="input-group">
+          <label>Exam Type</label>
+          <select id="exam-type">
+            <option value="">Select type...</option>
+            <option value="midterm">Midterm Exam</option>
+            <option value="final">Final Exam</option>
+            <option value="assignment">Assignment</option>
+            <option value="quiz">Quiz</option>
+            <option value="project">Project</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="analyse-btn" id="analyse-btn" onclick="startAnalysis()" disabled>
+        <span>🔍</span><span>Analyse My Exam</span>
+      </button>
+    </div>
+
+    <div class="loading-state" id="loading-state">
+      <div class="loading-spinner"></div>
+      <div class="loading-title">Analysing your exam...</div>
+      <p style="font-size:13px;color:var(--muted)">This takes about 10–15 seconds</p>
+      <div class="loading-steps">
+        <div class="loading-step" id="ls1"><div class="step-dot"></div> Reading file content</div>
+        <div class="loading-step" id="ls2"><div class="step-dot"></div> Identifying errors and mistakes</div>
+        <div class="loading-step" id="ls3"><div class="step-dot"></div> Classifying error types</div>
+        <div class="loading-step" id="ls4"><div class="step-dot"></div> Detecting weak topics</div>
+        <div class="loading-step" id="ls5"><div class="step-dot"></div> Building your learning plan</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="page-section" id="page-results">
+    <div class="page-header" style="margin-bottom:20px">
+      <div class="page-eyebrow">Analysis Complete</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <h1 class="page-title">Your Diagnosis</h1>
+        <button class="new-upload-btn" onclick="resetUpload()">+ New Upload</button>
+      </div>
+    </div>
+    <div id="results-content"></div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="page-section" id="page-history">
+    <div class="page-header">
+      <div class="page-eyebrow">Past Uploads</div>
+      <h1 class="page-title">Upload History</h1>
+      <p class="page-sub">All your previous exam analyses saved here.</p>
+    </div>
+    <div id="history-content"></div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="page-section" id="page-progress">
+    <div class="page-header">
+      <div class="page-eyebrow">Over Time</div>
+      <h1 class="page-title">Your Progress</h1>
+      <p class="page-sub">See how your error patterns are changing across uploads.</p>
+    </div>
+    <div id="progress-content"></div>
+  </div>
+</div>
+
+<script>
+let currentFile = null;
+const STORAGE_KEY = 'traceback_history';
+
+window.addEventListener('load', () => {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id') || 'Student';
+  document.getElementById('sidebar-id').textContent = id;
+  document.getElementById('sidebar-name').textContent = 'ID: ' + id;
+  renderHistory();
+  renderProgress();
+});
+
+function showPage(page, el) {
+  document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  if (el) el.classList.add('active');
+  if (page === 'history') renderHistory();
+  if (page === 'progress') renderProgress();
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+}
+
+function handleFile(file) {
+  if (!file) return;
+  currentFile = file;
+  const icons = {pdf:'📕',docx:'📘',doc:'📘',txt:'📝',png:'🖼️',jpg:'🖼️',jpeg:'🖼️'};
+  const ext = file.name.split('.').pop().toLowerCase();
+  document.getElementById('file-preview').classList.add('visible');
+  document.getElementById('file-icon').textContent = icons[ext] || '📄';
+  document.getElementById('file-name').textContent = file.name;
+  document.getElementById('file-size').textContent = formatSize(file.size);
+  checkReady();
+}
+
+function removeFile() {
+  currentFile = null;
+  document.getElementById('file-preview').classList.remove('visible');
+  document.getElementById('file-input').value = '';
+  checkReady();
+}
+
+function checkReady() {
+  document.getElementById('analyse-btn').disabled = !currentFile;
+}
+
+function formatSize(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
+}
+
+async function startAnalysis() {
+  if (!currentFile) return;
+  const subject = document.getElementById('subject-input').value || 'General';
+  const examType = document.getElementById('exam-type').value || 'exam';
+
+  document.getElementById('upload-area').style.display = 'none';
+  document.getElementById('loading-state').classList.add('visible');
+
+  const steps = ['ls1','ls2','ls3','ls4','ls5'];
+  for (let i = 0; i < steps.length; i++) {
+    await delay(800);
+    if (i > 0) document.getElementById(steps[i-1]).classList.replace('active','done');
+    document.getElementById(steps[i]).classList.add('active');
+  }
+  await delay(800);
+  document.getElementById(steps[steps.length-1]).classList.replace('active','done');
+  await delay(400);
+
+  let result;
+  try {
+    result = await callBackend(currentFile, subject, examType);
+  } catch(e) {
+    console.error('Backend error:', e);
+    document.getElementById('loading-state').classList.remove('visible');
+    document.getElementById('upload-area').style.display = 'block';
+    ['ls1','ls2','ls3','ls4','ls5'].forEach(id => document.getElementById(id).classList.remove('active','done'));
+    alert('Analysis failed: ' + e.message + '\n\nPlease try again.');
+    return;
+  }
+
+  saveToHistory({ id: Date.now(), date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}), filename: currentFile.name, subject, examType, result });
+
+  document.getElementById('loading-state').classList.remove('visible');
+  showResults(result);
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function readFile(file) {
+  return new Promise((resolve, reject) => {
+    const ext = file.name.split('.').pop().toLowerCase();
+    const reader = new FileReader();
+    if (ext === 'txt') {
+      reader.onload = e => resolve(e.target.result);
+      reader.onerror = reject;
+      reader.readAsText(file);
+    } else {
+      reader.onload = e => resolve(`[File: ${file.name}]`);
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(file);
+    }
+  });
+}
+
+async function callBackend(file, subject, examType) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('subject', subject);
+  formData.append('exam_type', examType);
+
+  const response = await fetch('https://traceback-api.onrender.com/analyse', {
+    method: 'POST',
+    body: formData
+  });
+
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || 'Server error ' + response.status);
+  return data;
+}
+
+function showResults(result) {
+  const rcColors = {
+    CONCEPT_ERROR:    {bg:'#fef2f2',text:'#b91c1c',border:'#fecaca'},
+    MEMORIZATION:     {bg:'#fffbeb',text:'#b45309',border:'#fde68a'},
+    APPLICATION_ERROR:{bg:'#eff6ff',text:'#1d4ed8',border:'#bfdbfe'},
+    MISREAD:          {bg:'#f5f3ff',text:'#6d28d9',border:'#ddd6fe'},
+    KNOWLEDGE_GAP:    {bg:'#fff7ed',text:'#c2410c',border:'#fed7aa'},
+    ON_TRACK:         {bg:'#f0fdf4',text:'#2d6a4f',border:'#86efac'},
+  };
+  const errorColors = {concept_error:'#b91c1c',memorization:'#b45309',application_error:'#1d4ed8',misread:'#6d28d9'};
+  const errorLabels = {concept_error:'Concept Error',memorization:'Memorization',application_error:'Application Error',misread:'Misread'};
+  const errorDescs  = {concept_error:"Didn't understand the core idea",memorization:"Memorized without understanding",application_error:"Knows it but can't apply it",misread:"Misunderstood the question"};
+
+  const c = rcColors[result.root_cause] || rcColors.APPLICATION_ERROR;
+  const maxError = Object.entries(result.error_breakdown).sort((a,b)=>b[1]-a[1])[0][0];
+
+  document.getElementById('results-content').innerHTML = `
+    <div class="diagnosis-banner" style="background:${c.bg};border:1.5px solid ${c.border}">
+      <div class="diag-eyebrow" style="color:${c.text}">ROOT CAUSE IDENTIFIED</div>
+      <div class="diag-title" style="color:${c.text}">${result.root_cause_label}</div>
+      <div class="diag-text" style="color:${c.text}">${result.root_cause_description}</div>
+      <div style="margin-top:12px;font-size:11px;opacity:0.6;font-family:var(--mono)">
+        ⚠ AI-generated analysis — verify with your professor for final confirmation.
+      </div>
+    </div>
+
+    <div class="section-title">Error Type Breakdown</div>
+    <div class="error-grid">
+      ${Object.entries(result.error_breakdown).map(([k,v])=>`
+        <div class="error-tile ${k===maxError?'highlight':''}">
+          <div class="error-pct" style="color:${errorColors[k]}">${v}%</div>
+          <div class="error-name">${errorLabels[k]}</div>
+          <div class="error-desc">${errorDescs[k]}</div>
+        </div>`).join('')}
+
+    </div>
+
+    <div class="section-title">Weak Topics Identified</div>
+    <div class="topics-list">
+      ${result.weak_topics.map((t,i)=>`
+        <div class="topic-row">
+          <div class="topic-rank">#${i+1}</div>
+          <div class="topic-name">${t.topic}</div>
+          <div class="topic-bar-wrap">
+            <div class="topic-bar" id="tb${i}" style="background:${t.severity>0.7?'#b91c1c':t.severity>0.4?'#b45309':'#2d6a4f'}"></div>
+          </div>
+          <div class="topic-label" style="color:${t.severity>0.7?'#b91c1c':t.severity>0.4?'#b45309':'#2d6a4f'}">${t.label}</div>
+        </div>`).join('')}
+    </div>
+
+    <div class="section-title">Your 4-Step Learning Plan</div>
+    <div class="plan-grid">
+      ${result.plan.map((s,i)=>`
+        <div class="plan-card" style="border-left-color:${c.text}">
+          <div class="plan-step-num">STEP ${i+1}</div>
+          <div class="plan-type">${s.type}</div>
+          <div class="plan-action">${s.action}</div>
+          <div class="plan-why">${s.why}</div>
+          <div class="plan-time">⏱ ${s.time}</div>
+        </div>`).join('')}
+    </div>
+
+    <div class="enc-card">💬 ${result.encouragement}</div>
+  `;
+
+  setTimeout(()=>{
+    result.weak_topics.forEach((t,i)=>{
+      const el = document.getElementById('tb'+i);
+      if(el) el.style.width = (t.severity*100)+'%';
+    });
+  }, 300);
+
+  document.getElementById('nav-results').style.display = 'flex';
+  showPage('results', document.getElementById('nav-results'));
+}
+
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+
+function saveToHistory(entry) {
+  const h = getHistory();
+  h.unshift(entry);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(h.slice(0,20)));
+}
+
+function renderHistory() {
+  const history = getHistory();
+  const el = document.getElementById('history-content');
+  if (!history.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><h3>No uploads yet</h3><p>Upload your first exam to see your history here.</p></div>`;
+    return;
+  }
+  const rcColors = {CONCEPT_ERROR:'#b91c1c',MEMORIZATION:'#b45309',APPLICATION_ERROR:'#1d4ed8',MISREAD:'#6d28d9',KNOWLEDGE_GAP:'#c2410c'};
+  el.innerHTML = `<div class="history-list">${history.map(h=>`
+    <div class="history-card">
+      <div class="history-date">${h.date}</div>
+      <div class="history-file">
+        <div class="history-filename">${h.filename}</div>
+        <div class="history-subject">${h.subject} · ${h.examType}</div>
+      </div>
+      <div class="history-rc" style="background:${(rcColors[h.result?.root_cause]||'#888')}22;color:${rcColors[h.result?.root_cause]||'#888'};border:1px solid ${(rcColors[h.result?.root_cause]||'#888')}44">
+        ${h.result?.root_cause_label||'Analysed'}
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function renderProgress() {
+  const history = getHistory();
+  const el = document.getElementById('progress-content');
+  if (history.length < 2) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📈</div><h3>Upload at least 2 exams</h3><p>Progress comparison becomes available after your second upload.</p></div>`;
+    return;
+  }
+  const latest = history[0], previous = history[1];
+  const types = ['concept_error','memorization','application_error','misread'];
+  const labels = {concept_error:'Concept Error',memorization:'Memorization',application_error:'Application Error',misread:'Misread'};
+  const colors = {concept_error:'#b91c1c',memorization:'#b45309',application_error:'#1d4ed8',misread:'#6d28d9'};
+
+  el.innerHTML = `
+    <div class="progress-card">
+      <h3>Error Type Comparison</h3>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:16px">
+        Comparing <strong>${latest.filename}</strong> vs <strong>${previous.filename}</strong>
+      </p>
+      ${types.map(k => {
+        const prev = previous.result?.error_breakdown?.[k]||0;
+        const curr = latest.result?.error_breakdown?.[k]||0;
+        const diff = curr-prev;
+        const dc = diff===0?'var(--muted)':diff>0?'#b91c1c':'#2d6a4f';
+        const dt = diff===0?'—':(diff>0?'▲ ':'▼ ')+Math.abs(diff)+'%';
+        return `<div class="compare-row">
+          <div class="compare-label">${labels[k]}</div>
+          <div class="compare-bars">
+            <div class="compare-bar-wrap">
+              <div class="compare-bar-label">Prev</div>
+              <div class="compare-track"><div class="compare-fill" style="width:${prev}%;background:${colors[k]}66"></div></div>
+              <div class="compare-val">${prev}%</div>
+            </div>
+            <div class="compare-bar-wrap">
+              <div class="compare-bar-label">Now</div>
+              <div class="compare-track"><div class="compare-fill" style="width:${curr}%;background:${colors[k]}"></div></div>
+              <div class="compare-val">${curr}%</div>
+            </div>
+          </div>
+          <div style="font-family:var(--mono);font-size:11px;color:${dc};width:48px;text-align:right;flex-shrink:0">${dt}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="progress-card">
+      <h3>Upload Timeline</h3>
+      ${history.slice(0,5).map(h=>`
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--muted);width:90px">${h.date}</div>
+          <div style="flex:1;font-size:13px;font-weight:600">${h.filename}</div>
+          <div style="font-size:12px;color:var(--muted)">${h.result?.root_cause_label||'—'}</div>
+        </div>`).join('')}
+    </div>`;
+
+  setTimeout(()=>{
+    document.querySelectorAll('.compare-fill').forEach(el=>{
+      const w=el.style.width; el.style.width='0';
+      setTimeout(()=>el.style.width=w, 100);
+    });
+  }, 200);
+}
+
+function resetUpload() {
+  currentFile = null;
+  document.getElementById('upload-area').style.display = 'block';
+  document.getElementById('loading-state').classList.remove('visible');
+  document.getElementById('file-preview').classList.remove('visible');
+  document.getElementById('file-input').value = '';
+  document.getElementById('subject-input').value = '';
+  document.getElementById('exam-type').value = '';
+  document.getElementById('analyse-btn').disabled = true;
+  ['ls1','ls2','ls3','ls4','ls5'].forEach(id=>{
+    document.getElementById(id).classList.remove('active','done');
+  });
+  showPage('upload', document.querySelector('.nav-item'));
+}
+</script>
+</body>
+</html>
