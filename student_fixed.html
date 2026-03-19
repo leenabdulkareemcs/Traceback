@@ -549,17 +549,17 @@ function showResults(result) {
       ${result.weak_topics.map((t,i)=>`
         <div class="topic-row">
           <div class="topic-rank">#${i+1}</div>
-          <div class="topic-name">${t.topic}</div>
+          <div class="topic-name">${t.topic || t.name || 'Unknown topic'}</div>
           <div class="topic-bar-wrap">
             <div class="topic-bar" id="tb${i}" style="background:${t.severity>0.7?'#b91c1c':t.severity>0.4?'#b45309':'#2d6a4f'}"></div>
           </div>
-          <div class="topic-label" style="color:${t.severity>0.7?'#b91c1c':t.severity>0.4?'#b45309':'#2d6a4f'}">${t.label}</div>
+          <div class="topic-label" style="color:${t.severity>0.7?'#b91c1c':t.severity>0.4?'#b45309':'#2d6a4f'}">${t.label || t.severity_label || 'Medium'}</div>
         </div>`).join('')}
     </div>
 
     <div class="section-title">Your 4-Step Learning Plan</div>
     <div class="plan-grid">
-      ${result.plan.map((s,i)=>`
+      ${(result.weak_topics || []).slice(0,3).map((t,i)=>`
         <div class="plan-card" style="border-left-color:${c.text}">
           <div class="plan-step-num">STEP ${i+1}</div>
           <div class="plan-type">${s.type}</div>
