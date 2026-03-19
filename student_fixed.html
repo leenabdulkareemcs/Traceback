@@ -546,36 +546,43 @@ function showResults(result) {
 
     <div class="section-title">Weak Topics Identified</div>
     <div class="topics-list">
-      ${result.weak_topics.map((t,i)=>`
+      ${(result.weak_topics||[]).slice(0,3).map((t,i)=>{
+        const name = typeof t === 'string' ? t : (t.topic || t.name || 'Unknown');
+        const sev = typeof t === 'string' ? 0.6 : parseFloat(t.severity || 0.5);
+        const lbl = typeof t === 'string' ? 'High' : (t.label || (sev>0.7?'Critical':sev>0.4?'High':'Medium'));
+        const col = sev>0.7?'#b91c1c':sev>0.4?'#b45309':'#2d6a4f';
+        return `
         <div class="topic-row">
           <div class="topic-rank">#${i+1}</div>
-          <div class="topic-name">${t.topic || t.name || 'Unknown topic'}</div>
+          <div class="topic-name">${name}</div>
           <div class="topic-bar-wrap">
-            <div class="topic-bar" id="tb${i}" style="background:${t.severity>0.7?'#b91c1c':t.severity>0.4?'#b45309':'#2d6a4f'}"></div>
+            <div class="topic-bar" id="tb${i}" style="background:${col}"></div>
           </div>
-          <div class="topic-label" style="color:${t.severity>0.7?'#b91c1c':t.severity>0.4?'#b45309':'#2d6a4f'}">${t.label || t.severity_label || 'Medium'}</div>
-        </div>`).join('')}
+          <div class="topic-label" style="color:${col}">${lbl}</div>
+        </div>`;
+      }).join('')}
     </div>
 
     <div class="section-title">Your 4-Step Learning Plan</div>
     <div class="plan-grid">
-      ${(result.weak_topics || []).slice(0,3).map((t,i)=>`
+      ${(result.plan||[]).map((s,i)=>`
         <div class="plan-card" style="border-left-color:${c.text}">
           <div class="plan-step-num">STEP ${i+1}</div>
-          <div class="plan-type">${s.type}</div>
-          <div class="plan-action">${s.action}</div>
-          <div class="plan-why">${s.why}</div>
-          <div class="plan-time">⏱ ${s.time}</div>
+          <div class="plan-type">${s.type||''}</div>
+          <div class="plan-action">${s.action||''}</div>
+          <div class="plan-why">${s.why||''}</div>
+          <div class="plan-time">⏱ ${s.time||''}</div>
         </div>`).join('')}
     </div>
 
-    <div class="enc-card">💬 ${result.encouragement}</div>
+    <div class="enc-card">💬 ${result.encouragement||''}</div>
   `;
 
   setTimeout(()=>{
-    result.weak_topics.forEach((t,i)=>{
+    (result.weak_topics||[]).slice(0,3).forEach((t,i)=>{
       const el = document.getElementById('tb'+i);
-      if(el) el.style.width = (t.severity*100)+'%';
+      const sev = typeof t === 'string' ? 0.6 : parseFloat(t.severity||0.5);
+      if(el) el.style.width = (sev*100)+'%';
     });
   }, 300);
 
