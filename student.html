@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -381,6 +382,33 @@
 </div>
 
 <script>
+  // Supabase setup
+const SUPABASE_URL = 'https://qrhjqxlmsidnawauqdgy.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyaGpxeGxtc2lkbmF3YXVxZGd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwMzAwNDYsImV4cCI6MjA4OTYwNjA0Nn0.sqHizRSE5sKuZe_1GWlosiB2pK83bIxgi4E6ogFm42A';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function saveToSupabase(result, subject, examType) {
+  try {
+    const topics = result.weak_topics || [];
+    await supabase.from('diagnoses').insert({
+      subject: subject || 'Unknown',
+      exam_type: examType || 'exam',
+      root_cause: result.root_cause,
+      root_cause_label: result.root_cause_label,
+      concept_error: result.error_breakdown?.concept_error || 0,
+      memorization: result.error_breakdown?.memorization || 0,
+      application_error: result.error_breakdown?.application_error || 0,
+      misread: result.error_breakdown?.misread || 0,
+      weak_topic_1: topics[0]?.topic || topics[0] || null,
+      weak_topic_2: topics[1]?.topic || topics[1] || null,
+      weak_topic_3: topics[2]?.topic || topics[2] || null,
+      overall_diagnosis: result.overall_diagnosis
+    });
+    console.log('Saved to dataset');
+  } catch(e) {
+    console.log('Dataset save failed (non-critical):', e.message);
+  }
+}
 let currentFile = null;
 const STORAGE_KEY = 'traceback_history';
 
@@ -466,7 +494,8 @@ async function startAnalysis() {
     alert('Analysis failed: ' + e.message + '\n\nPlease try again.');
     return;
   }
-
+  
+  saveToSupabase(result, subject, examType);
   saveToHistory({ id: Date.now(), date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}), filename: currentFile.name, subject, examType, result });
 
   document.getElementById('loading-state').classList.remove('visible');
