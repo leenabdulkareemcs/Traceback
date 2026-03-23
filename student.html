@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+<!-- saved from url=(0044)file:///C:/Users/Hp/Downloads/student_3.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Traceback — Student Dashboard</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="./student_files/supabase-js@2"></script>
+<link href="./student_files/css2" rel="stylesheet">
+<link href="./student_files/css2(1)" rel="stylesheet">
 <style>
   :root {
     --bg: #f7f5f0; --surface: #ffffff; --surface2: #f0ede6;
@@ -124,129 +125,65 @@
   .compare-bar-label { font-family: var(--mono); font-size: 10px; color: var(--muted); width: 32px; flex-shrink: 0; }
   .compare-track { flex: 1; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
   .compare-fill { height: 100%; border-radius: 4px; transition: width 1s ease; width: 0; }
+  .compare-val { font-family: var(--mono); font-size: 11px; width: 36px; text-align: right; flex-shrink: 0; }
   /* ── MOBILE ── */
   @media (max-width: 768px) {
     body { flex-direction: column; height: 100vh; overflow: hidden; }
-
-    /* Hide sidebar on mobile */
     .sidebar { display: none; }
-
-    /* Bottom navigation bar */
-    .bottom-nav {
-      display: flex;
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: var(--sidebar-bg);
-      border-top: 1px solid var(--sidebar-border);
-      z-index: 100;
-      padding: 0;
-      height: 60px;
-    }
-
-    .bottom-nav-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      padding: 8px 4px;
-      transition: all 0.15s;
-      border-top: 2px solid transparent;
-    }
-
+    .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: var(--sidebar-bg); border-top: 1px solid var(--sidebar-border); z-index: 100; padding: 0; height: 60px; }
+    .bottom-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; border: none; background: transparent; padding: 8px 4px; transition: all 0.15s; border-top: 2px solid transparent; }
     .bottom-nav-item.active { border-top-color: var(--green); }
     .bottom-nav-item.active .bn-icon { color: var(--green); }
     .bottom-nav-item.active .bn-label { color: var(--green); }
-
     .bn-icon { font-size: 18px; color: #6a7a6e; }
     .bn-label { font-size: 9px; color: #6a7a6e; font-family: var(--mono); letter-spacing: 0.5px; }
-
-    /* Main adjustments */
-    .main {
-      padding: 20px 16px 80px;
-      height: 100vh;
-      overflow-y: auto;
-    }
-
-    /* Page header */
+    .main { padding: 20px 16px 80px; height: 100vh; overflow-y: auto; }
     .page-title { font-size: 22px; }
     .page-sub { font-size: 13px; }
-
-    /* Upload zone */
     .upload-zone { padding: 36px 20px; }
     .upload-icon { font-size: 32px; margin-bottom: 12px; }
     .upload-title { font-size: 17px; }
-
-    /* Input row → single column */
     .input-row { grid-template-columns: 1fr; gap: 12px; }
-
-    /* Error grid → 2 columns on mobile */
     .error-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
     .error-pct { font-size: 22px; }
-
-    /* Plan grid → single column */
     .plan-grid { grid-template-columns: 1fr; }
-
-    /* Results header */
-    .page-header div[style*="justify-content"] {
-      flex-direction: column;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    /* Diagnosis banner */
     .diag-title { font-size: 20px; }
     .diag-text { font-size: 13px; }
-
-    /* Topic bar wrap smaller */
     .topic-bar-wrap { width: 80px; }
-
-    /* Compare label smaller */
     .compare-label { width: 100px; font-size: 12px; }
-
-    /* History card */
     .history-date { width: 70px; font-size: 10px; }
   }
-
-  /* Show bottom nav only on mobile */
   .bottom-nav { display: none; }
+  @media (max-width: 768px) { .bottom-nav { display: flex; } }
 
-  @media (max-width: 768px) {
-    .bottom-nav { display: flex; }
-  }
-[dir="rtl"] body { direction: rtl; }
-[dir="rtl"] .sidebar { border-right: none; border-left: 1px solid var(--sidebar-border); }
-[dir="rtl"] .nav-item { border-left: none; border-right: 2px solid transparent; }
-[dir="rtl"] .nav-item.active { border-right-color: var(--green); }
-[dir="rtl"] .plan-card { border-left: none; border-right: 3px solid var(--text); }
-[dir="rtl"] .enc-card { border-left: none; border-right: 3px solid #2d6a4f; border-radius: 12px 0 0 12px; }
-[dir="rtl"] * { font-family: 'Tajawal', sans-serif; }
-[dir="rtl"] .section-title { text-align: right; }
-[dir="rtl"] .topic-row { flex-direction: row-reverse; }
-[dir="rtl"] .topic-label { text-align: left; }
-[dir="rtl"] .topic-rank { text-align: right; }
-[dir="rtl"] .error-tile { direction: rtl; }
-[dir="rtl"] .diag-eyebrow { text-align: right; }
-[dir="rtl"] .diag-title { text-align: right; }
-[dir="rtl"] .diag-text { text-align: right; }
-[dir="rtl"] .history-card { flex-direction: row-reverse; }
-[dir="rtl"] .compare-row { flex-direction: row-reverse; }
-[dir="rtl"] .compare-label { text-align: right; }
-[dir="rtl"] .file-preview { flex-direction: row-reverse; }
-[dir="rtl"] .page-header { text-align: right; }
-[dir="rtl"] .plan-card { text-align: right; }
-[dir="rtl"] .upload-zone { direction: rtl; }
-[dir="rtl"] .page-header div[style*="justify-content"] { flex-direction: row-reverse; }
-[dir="rtl"] .loading-steps { text-align: right; }
-[dir="rtl"] .loading-step { flex-direction: row-reverse; }
-[dir="rtl"] .sidebar-logo { flex-direction: row-reverse; }
-[dir="rtl"] .student-info { flex-direction: row-reverse; }
- </style>
-
+  /* ── ARABIC RTL ── */
+  [dir="rtl"] body { direction: rtl; }
+  [dir="rtl"] .sidebar { border-right: none; border-left: 1px solid var(--sidebar-border); }
+  [dir="rtl"] .nav-item { border-left: none; border-right: 2px solid transparent; }
+  [dir="rtl"] .nav-item.active { border-right-color: var(--green); }
+  [dir="rtl"] .plan-card { border-left: none; border-right: 3px solid var(--text); text-align: right; }
+  [dir="rtl"] .enc-card { border-left: none; border-right: 3px solid #2d6a4f; border-radius: 12px 0 0 12px; text-align: right; }
+  [dir="rtl"] * { font-family: 'Tajawal', sans-serif; }
+  [dir="rtl"] .section-title { text-align: right; }
+  [dir="rtl"] .topic-row { flex-direction: row-reverse; }
+  [dir="rtl"] .topic-label { text-align: left; }
+  [dir="rtl"] .error-tile { direction: rtl; }
+  [dir="rtl"] .diag-eyebrow { text-align: right; }
+  [dir="rtl"] .diag-title { text-align: right; }
+  [dir="rtl"] .diag-text { text-align: right; }
+  [dir="rtl"] .history-card { flex-direction: row-reverse; }
+  [dir="rtl"] .compare-row { flex-direction: row-reverse; }
+  [dir="rtl"] .compare-label { text-align: right; }
+  [dir="rtl"] .file-preview { flex-direction: row-reverse; }
+  [dir="rtl"] .page-header { text-align: right; }
+  [dir="rtl"] .upload-zone { direction: rtl; }
+  [dir="rtl"] .page-header div[style*="justify-content"] { flex-direction: row-reverse; }
+  [dir="rtl"] .loading-steps { text-align: right; }
+  [dir="rtl"] .loading-step { flex-direction: row-reverse; }
+  [dir="rtl"] .sidebar-logo { flex-direction: row-reverse; }
+  [dir="rtl"] .student-info { flex-direction: row-reverse; }
+  [dir="rtl"] .diagnosis-banner { text-align: right; }
+</style>
 </head>
 <body>
 
@@ -255,22 +192,22 @@
     <div class="logo-mark">TB</div>
     <div class="logo-text">Trace<span>back</span></div>
   </div>
-  <div class="nav-item active" onclick="showPage('upload',this)">
-    <div class="nav-icon">📤</div><div class="nav-label">Upload Exam</div>
+  <div class="nav-item active" onclick="showPage(&#39;upload&#39;,this)">
+    <div class="nav-icon">📤</div><div class="nav-label" id="nav-upload-label">Upload Exam</div>
   </div>
-  <div class="nav-item" onclick="showPage('results',this)" id="nav-results" style="display:none">
-    <div class="nav-icon">🔍</div><div class="nav-label">My Diagnosis</div>
+  <div class="nav-item" onclick="showPage(&#39;results&#39;,this)" id="nav-results" style="display:none">
+    <div class="nav-icon">🔍</div><div class="nav-label" id="nav-diagnosis-label">My Diagnosis</div>
   </div>
-  <div class="nav-item" onclick="showPage('history',this)">
-    <div class="nav-icon">📅</div><div class="nav-label">History</div>
+  <div class="nav-item" onclick="showPage(&#39;history&#39;,this)">
+    <div class="nav-icon">📅</div><div class="nav-label" id="nav-history-label">History</div>
   </div>
-  <div class="nav-item" onclick="showPage('progress',this)">
-    <div class="nav-icon">📈</div><div class="nav-label">Progress</div>
+  <div class="nav-item" onclick="showPage(&#39;progress&#39;,this)">
+    <div class="nav-icon">📈</div><div class="nav-label" id="nav-progress-label">Progress</div>
   </div>
   <div class="nav-item" onclick="toggleLang()" style="margin-top:8px;border-top:1px solid var(--sidebar-border);padding-top:12px">
-  <div class="nav-icon">🌐</div>
-  <div class="nav-label" id="lang-label">العربية</div>
-</div>
+    <div class="nav-icon">🌐</div>
+    <div class="nav-label" id="lang-label">العربية</div>
+  </div>
   <div class="sidebar-footer">
     <div class="student-info">
       <div class="student-avatar">🎓</div>
@@ -282,47 +219,37 @@
   </div>
 </div>
 
-<!-- Mobile bottom navigation -->
 <div class="bottom-nav">
-  <button class="bottom-nav-item active" onclick="showPageMobile('upload', this)">
-    <div class="bn-icon">📤</div>
-    <div class="bn-label">Upload</div>
+  <button class="bottom-nav-item active" onclick="showPageMobile(&#39;upload&#39;, this)">
+    <div class="bn-icon">📤</div><div class="bn-label" id="bn-upload-label">Upload</div>
   </button>
-  <button class="bottom-nav-item" onclick="showPageMobile('results', this)" id="bn-results" style="display:none">
-    <div class="bn-icon">🔍</div>
-    <div class="bn-label">Diagnosis</div>
+  <button class="bottom-nav-item" onclick="showPageMobile(&#39;results&#39;, this)" id="bn-results" style="display:none">
+    <div class="bn-icon">🔍</div><div class="bn-label">Diagnosis</div>
   </button>
-  <button class="bottom-nav-item" onclick="showPageMobile('history', this)">
-    <div class="bn-icon">📅</div>
-    <div class="bn-label">History</div>
+  <button class="bottom-nav-item" onclick="showPageMobile(&#39;history&#39;, this)">
+    <div class="bn-icon">📅</div><div class="bn-label" id="bn-history-label">History</div>
   </button>
-  <button class="bottom-nav-item" onclick="showPageMobile('progress', this)">
-    <div class="bn-icon">📈</div>
-    <div class="bn-label">Progress</div>
+  <button class="bottom-nav-item" onclick="showPageMobile(&#39;progress&#39;, this)">
+    <div class="bn-icon">📈</div><div class="bn-label" id="bn-progress-label">Progress</div>
   </button>
 </div>
 
 <div class="main">
   <div class="page-section active" id="page-upload">
     <div class="page-header">
-      <div class="page-eyebrow">New Analysis</div>
-      <h1 class="page-title">Upload Your Exam</h1>
-      <p class="page-sub">Upload your exam and Traceback will diagnose exactly where your understanding broke down. Anonymous data may be collected to improve the system.</p>
+      <div class="page-eyebrow" id="eyebrow-upload">New Analysis</div>
+      <h1 class="page-title" id="title-upload">Upload Your Exam</h1>
+      <p class="page-sub" id="sub-upload">Upload your exam and Traceback will diagnose exactly where your understanding broke down. Anonymous data may be collected to improve the system.</p>
     </div>
     <div id="upload-area">
-      <div class="upload-zone" id="upload-zone"
-           ondragover="event.preventDefault();this.classList.add('drag-over')"
-           ondragleave="this.classList.remove('drag-over')"
-           ondrop="handleDrop(event)">
+      <div class="upload-zone" id="upload-zone" ondragover="event.preventDefault();this.classList.add(&#39;drag-over&#39;)" ondragleave="this.classList.remove(&#39;drag-over&#39;)" ondrop="handleDrop(event)">
         <input type="file" id="file-input" accept=".pdf,.docx,.txt,.png,.jpg,.jpeg" onchange="handleFile(this.files[0])">
         <div class="upload-icon">📄</div>
-        <div class="upload-title">Drop your exam here</div>
-        <div class="upload-sub">or click to browse your files</div>
+        <div class="upload-title" id="upload-zone-title">Drop your exam here</div>
+        <div class="upload-sub" id="upload-zone-sub">or click to browse your files</div>
         <div class="upload-types">
-          <span class="type-chip">PDF</span>
-          <span class="type-chip">DOCX</span>
-          <span class="type-chip">TXT</span>
-          <span class="type-chip">Image</span>
+          <span class="type-chip">PDF</span><span class="type-chip">DOCX</span>
+          <span class="type-chip">TXT</span><span class="type-chip">Image</span>
         </div>
       </div>
       <div class="file-preview" id="file-preview">
@@ -335,11 +262,11 @@
       </div>
       <div class="input-row">
         <div class="input-group">
-          <label>Subject / Course</label>
-          <input type="text" id="subject-input" placeholder="Optional — we'll detect it automatically">
+          <label id="label-subject">Subject / Course</label>
+          <input type="text" id="subject-input" placeholder="Optional — we&#39;ll detect it automatically">
         </div>
         <div class="input-group">
-          <label>Exam Type</label>
+          <label id="label-examtype">Exam Type</label>
           <select id="exam-type">
             <option value="">Select type...</option>
             <option value="midterm">Midterm Exam</option>
@@ -350,30 +277,30 @@
           </select>
         </div>
       </div>
-      <button class="analyse-btn" id="analyse-btn" onclick="startAnalysis()" disabled>
-        <span>🔍</span><span>Analyse My Exam</span>
+      <button class="analyse-btn" id="analyse-btn" onclick="startAnalysis()" disabled="">
+        <span>🔍</span><span id="analyse-btn-text">Analyse My Exam</span>
       </button>
     </div>
     <div class="loading-state" id="loading-state">
       <div class="loading-spinner"></div>
-      <div class="loading-title">Analysing your exam...</div>
-      <p style="font-size:13px;color:var(--muted)">This takes about 10–15 seconds</p>
+      <div class="loading-title" id="loading-title-text">Analysing your exam...</div>
+      <p style="font-size:13px;color:var(--muted)" id="loading-sub-text">This takes about 10–15 seconds</p>
       <div class="loading-steps">
-        <div class="loading-step" id="ls1"><div class="step-dot"></div> Reading file content</div>
-        <div class="loading-step" id="ls2"><div class="step-dot"></div> Identifying errors and mistakes</div>
-        <div class="loading-step" id="ls3"><div class="step-dot"></div> Classifying error types</div>
-        <div class="loading-step" id="ls4"><div class="step-dot"></div> Detecting weak topics</div>
-        <div class="loading-step" id="ls5"><div class="step-dot"></div> Building your learning plan</div>
+        <div class="loading-step" id="ls1"><div class="step-dot"></div><span id="ls1-text"> Reading file content</span></div>
+        <div class="loading-step" id="ls2"><div class="step-dot"></div><span id="ls2-text"> Identifying errors and mistakes</span></div>
+        <div class="loading-step" id="ls3"><div class="step-dot"></div><span id="ls3-text"> Classifying error types</span></div>
+        <div class="loading-step" id="ls4"><div class="step-dot"></div><span id="ls4-text"> Detecting weak topics</span></div>
+        <div class="loading-step" id="ls5"><div class="step-dot"></div><span id="ls5-text"> Building your learning plan</span></div>
       </div>
     </div>
   </div>
 
   <div class="page-section" id="page-results">
     <div class="page-header" style="margin-bottom:20px">
-      <div class="page-eyebrow">Analysis Complete</div>
+      <div class="page-eyebrow" id="eyebrow-results">Analysis Complete</div>
       <div style="display:flex;align-items:center;justify-content:space-between">
-        <h1 class="page-title">Your Diagnosis</h1>
-        <button class="new-upload-btn" onclick="resetUpload()">+ New Upload</button>
+        <h1 class="page-title" id="title-results">Your Diagnosis</h1>
+        <button class="new-upload-btn" onclick="resetUpload()" id="new-upload-btn">+ New Upload</button>
       </div>
     </div>
     <div id="results-content"></div>
@@ -381,20 +308,314 @@
 
   <div class="page-section" id="page-history">
     <div class="page-header">
-      <div class="page-eyebrow">Past Uploads</div>
-      <h1 class="page-title">Upload History</h1>
-      <p class="page-sub">All your previous exam analyses saved here.</p>
+      <div class="page-eyebrow" id="eyebrow-history">Past Uploads</div>
+      <h1 class="page-title" id="title-history">Upload History</h1>
+      <p class="page-sub" id="sub-history">All your previous exam analyses saved here.</p>
     </div>
-    <div id="history-content"></div>
+    <div id="history-content"><div class="history-list">
+    <div class="history-card">
+      <div class="history-date">21 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_wrong.png</div>
+        <div class="history-subject">Data Structure · midterm</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        Fundamental Concept Misunderstanding
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_wrong.png</div>
+        <div class="history-subject">Data Structure · midterm</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        Conceptual Understanding Issues
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_wrong.png</div>
+        <div class="history-subject">Data Structure · midterm</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        Conceptual Misunderstandings
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_wrong.png</div>
+        <div class="history-subject">Data Structure · midterm</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        Fundamental Concept Misunderstanding
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_wrong.png</div>
+        <div class="history-subject">Data Structure · midterm</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        Fundamental Concept Misunderstanding
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_wrong.png</div>
+        <div class="history-subject">Data Structure · midterm</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        Fundamental Concept Misunderstanding
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_wrong.png</div>
+        <div class="history-subject">Data Structure · midterm</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        Fundamental Concept Misunderstanding
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_wrong.png</div>
+        <div class="history-subject">Data Structure · midterm</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        Fundamental Concept Misunderstanding
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_wrong.png</div>
+        <div class="history-subject">Data Structure · midterm</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        Fundamental Concept Misunderstanding
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_wrong.png</div>
+        <div class="history-subject">Data Structure · midterm</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        Conceptual Understanding Issues
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_wrong.png</div>
+        <div class="history-subject">Data Structure · midterm</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        Fundamental Concept Misunderstanding
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_wrong.png</div>
+        <div class="history-subject">Data Structure · midterm</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        Conceptual Understanding Issues
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_wrong.png</div>
+        <div class="history-subject">Data Structure · midterm</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        Fundamental Concept Misunderstanding
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_Perfect2.png</div>
+        <div class="history-subject">Python · midterm</div>
+      </div>
+      <div class="history-rc" style="background:#2d6a4f22;color:#2d6a4f;border:1px solid #2d6a4f44">
+        performing well
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_Perfect.png</div>
+        <div class="history-subject">Networks · quiz</div>
+      </div>
+      <div class="history-rc" style="background:#2d6a4f22;color:#2d6a4f;border:1px solid #2d6a4f44">
+        Strong Performance
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_Perfect.png</div>
+        <div class="history-subject">Networks · quiz</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        OSI Layer Model Confusion
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_Perfect.png</div>
+        <div class="history-subject">Networks · quiz</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        Minor Concept Confusion
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_Perfect.png</div>
+        <div class="history-subject">Networks · quiz</div>
+      </div>
+      <div class="history-rc" style="background:#b91c1c22;color:#b91c1c;border:1px solid #b91c1c44">
+        Misunderstanding of OSI Layer Assignment for MAC Addresses
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">19 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">test_Perfect2.png</div>
+        <div class="history-subject">Networks · quiz</div>
+      </div>
+      <div class="history-rc" style="background:#1d4ed822;color:#1d4ed8;border:1px solid #1d4ed844">
+        Incorrect Application of Indexing Rules
+      </div>
+    </div>
+    <div class="history-card">
+      <div class="history-date">18 Mar 2026</div>
+      <div class="history-file">
+        <div class="history-filename">text_exam2.txt</div>
+        <div class="history-subject">Pyhton · midterm</div>
+      </div>
+      <div class="history-rc" style="background:#1d4ed822;color:#1d4ed8;border:1px solid #1d4ed844">
+        Inconsistent Application of Known Concepts
+      </div>
+    </div></div></div>
   </div>
 
   <div class="page-section" id="page-progress">
     <div class="page-header">
-      <div class="page-eyebrow">Over Time</div>
-      <h1 class="page-title">Your Progress</h1>
-      <p class="page-sub">See how your error patterns are changing across uploads.</p>
+      <div class="page-eyebrow" id="eyebrow-progress">Over Time</div>
+      <h1 class="page-title" id="title-progress">Your Progress</h1>
+      <p class="page-sub" id="sub-progress">See how your error patterns are changing across uploads.</p>
     </div>
-    <div id="progress-content"></div>
+    <div id="progress-content">
+    <div class="progress-card">
+      <h3>Error Type Comparison</h3>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:16px">Comparing <strong>test_wrong.png</strong> vs <strong>test_wrong.png</strong></p>
+      <div class="compare-row">
+          <div class="compare-label">Concept Error</div>
+          <div class="compare-bars">
+            <div class="compare-bar-wrap">
+              <div class="compare-bar-label">Prev</div>
+              <div class="compare-track"><div class="compare-fill" style="width: 60%; background: rgba(185, 28, 28, 0.4);"></div></div>
+              <div class="compare-val">60%</div>
+            </div>
+            <div class="compare-bar-wrap">
+              <div class="compare-bar-label">Now</div>
+              <div class="compare-track"><div class="compare-fill" style="width: 80%; background: rgb(185, 28, 28);"></div></div>
+              <div class="compare-val">80%</div>
+            </div>
+          </div>
+          <div style="font-family:var(--mono);font-size:11px;color:#b91c1c;width:48px;text-align:right;flex-shrink:0">▲ 20%</div>
+        </div><div class="compare-row">
+          <div class="compare-label">Memorization</div>
+          <div class="compare-bars">
+            <div class="compare-bar-wrap">
+              <div class="compare-bar-label">Prev</div>
+              <div class="compare-track"><div class="compare-fill" style="width: 25%; background: rgba(180, 83, 9, 0.4);"></div></div>
+              <div class="compare-val">25%</div>
+            </div>
+            <div class="compare-bar-wrap">
+              <div class="compare-bar-label">Now</div>
+              <div class="compare-track"><div class="compare-fill" style="width: 15%; background: rgb(180, 83, 9);"></div></div>
+              <div class="compare-val">15%</div>
+            </div>
+          </div>
+          <div style="font-family:var(--mono);font-size:11px;color:#2d6a4f;width:48px;text-align:right;flex-shrink:0">▼ 10%</div>
+        </div><div class="compare-row">
+          <div class="compare-label">Application Error</div>
+          <div class="compare-bars">
+            <div class="compare-bar-wrap">
+              <div class="compare-bar-label">Prev</div>
+              <div class="compare-track"><div class="compare-fill" style="width: 15%; background: rgba(29, 78, 216, 0.4);"></div></div>
+              <div class="compare-val">15%</div>
+            </div>
+            <div class="compare-bar-wrap">
+              <div class="compare-bar-label">Now</div>
+              <div class="compare-track"><div class="compare-fill" style="width: 5%; background: rgb(29, 78, 216);"></div></div>
+              <div class="compare-val">5%</div>
+            </div>
+          </div>
+          <div style="font-family:var(--mono);font-size:11px;color:#2d6a4f;width:48px;text-align:right;flex-shrink:0">▼ 10%</div>
+        </div><div class="compare-row">
+          <div class="compare-label">Misread</div>
+          <div class="compare-bars">
+            <div class="compare-bar-wrap">
+              <div class="compare-bar-label">Prev</div>
+              <div class="compare-track"><div class="compare-fill" style="width: 0%; background: rgba(109, 40, 217, 0.4);"></div></div>
+              <div class="compare-val">0%</div>
+            </div>
+            <div class="compare-bar-wrap">
+              <div class="compare-bar-label">Now</div>
+              <div class="compare-track"><div class="compare-fill" style="width: 0%; background: rgb(109, 40, 217);"></div></div>
+              <div class="compare-val">0%</div>
+            </div>
+          </div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--muted);width:48px;text-align:right;flex-shrink:0">—</div>
+        </div>
+    </div>
+    <div class="progress-card">
+      <h3>Upload Timeline</h3>
+      
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--muted);width:90px">21 Mar 2026</div>
+          <div style="flex:1;font-size:13px;font-weight:600">test_wrong.png</div>
+          <div style="font-size:12px;color:var(--muted)">Fundamental Concept Misunderstanding</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--muted);width:90px">19 Mar 2026</div>
+          <div style="flex:1;font-size:13px;font-weight:600">test_wrong.png</div>
+          <div style="font-size:12px;color:var(--muted)">Conceptual Understanding Issues</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--muted);width:90px">19 Mar 2026</div>
+          <div style="flex:1;font-size:13px;font-weight:600">test_wrong.png</div>
+          <div style="font-size:12px;color:var(--muted)">Conceptual Misunderstandings</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--muted);width:90px">19 Mar 2026</div>
+          <div style="flex:1;font-size:13px;font-weight:600">test_wrong.png</div>
+          <div style="font-size:12px;color:var(--muted)">Fundamental Concept Misunderstanding</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--muted);width:90px">19 Mar 2026</div>
+          <div style="flex:1;font-size:13px;font-weight:600">test_wrong.png</div>
+          <div style="font-size:12px;color:var(--muted)">Fundamental Concept Misunderstanding</div>
+        </div>
+    </div></div>
   </div>
 </div>
 
@@ -407,10 +628,8 @@ async function saveToSupabase(result, subject, examType) {
   try {
     const topics = result.weak_topics || [];
     await sb.from('diagnoses').insert({
-      subject: subject || 'Unknown',
-      exam_type: examType || 'exam',
-      root_cause: result.root_cause,
-      root_cause_label: result.root_cause_label,
+      subject: subject || 'Unknown', exam_type: examType || 'exam',
+      root_cause: result.root_cause, root_cause_label: result.root_cause_label,
       concept_error: result.error_breakdown?.concept_error || 0,
       memorization: result.error_breakdown?.memorization || 0,
       application_error: result.error_breakdown?.application_error || 0,
@@ -421,9 +640,7 @@ async function saveToSupabase(result, subject, examType) {
       overall_diagnosis: result.overall_diagnosis
     });
     console.log('Saved to dataset ✅');
-  } catch(e) {
-    console.log('Dataset save skipped:', e.message);
-  }
+  } catch(e) { console.log('Dataset save skipped:', e.message); }
 }
 
 let currentFile = null;
@@ -431,7 +648,6 @@ const STORAGE_KEY = 'traceback_history';
 let currentUser = null;
 let db = null;
 
-// Firebase + Firestore setup
 import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js').then(({initializeApp}) => {
   import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js').then(({getAuth, onAuthStateChanged}) => {
     import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js').then(({getFirestore, collection, addDoc, getDocs, query, orderBy, limit}) => {
@@ -443,19 +659,15 @@ import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js').then(({initi
         messagingSenderId: "327859614522",
         appId: "1:327859614522:web:fb6ef597469411d0b51603"
       });
-
       const auth = getAuth(app);
       db = getFirestore(app);
-
       onAuthStateChanged(auth, (user) => {
         if (user) {
           currentUser = user;
-          const name = user.displayName || user.email.split('@')[0];
-          document.getElementById('sidebar-name').textContent = name;
+          document.getElementById('sidebar-name').textContent = user.displayName || user.email.split('@')[0];
           document.getElementById('sidebar-id').textContent = user.email;
           loadHistoryFromCloud(user.uid, getDocs, query, collection, orderBy, limit);
         } else {
-          // Not logged in — use localStorage
           const stored = JSON.parse(localStorage.getItem('tb_user') || 'null');
           if (stored) {
             document.getElementById('sidebar-name').textContent = stored.name || 'Student';
@@ -463,27 +675,10 @@ import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js').then(({initi
           }
         }
       });
-
       window._firestoreSave = async (entry) => {
         if (!currentUser || !db) return;
-        try {
-          await addDoc(collection(db, 'users', currentUser.uid, 'history'), entry);
-          console.log('Saved to Firestore ✅');
-        } catch(e) {
-          console.log('Firestore save failed:', e.message);
-        }
-      };
-
-      window._firestoreLoad = async (uid) => {
-        if (!db) return [];
-        try {
-          const q = query(collection(db, 'users', uid, 'history'), orderBy('timestamp', 'desc'), limit(20));
-          const snap = await getDocs(q);
-          return snap.docs.map(d => d.data());
-        } catch(e) {
-          console.log('Firestore load failed:', e.message);
-          return [];
-        }
+        try { await addDoc(collection(db, 'users', currentUser.uid, 'history'), entry); console.log('Saved to Firestore ✅'); }
+        catch(e) { console.log('Firestore save failed:', e.message); }
       };
     });
   });
@@ -496,23 +691,19 @@ async function loadHistoryFromCloud(uid, getDocs, query, collection, orderBy, li
     const cloudHistory = snap.docs.map(d => d.data());
     if (cloudHistory.length > 0) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(cloudHistory));
-      renderHistory();
-      renderProgress();
+      renderHistory(); renderProgress();
     }
-  } catch(e) {
-    console.log('Cloud history load failed:', e.message);
-  }
+  } catch(e) { console.log('Cloud history load failed:', e.message); }
 }
 
 window.addEventListener('load', () => {
-  // Try localStorage user first, Firebase will override if logged in
   const stored = JSON.parse(localStorage.getItem('tb_user') || 'null');
   if (stored) {
     document.getElementById('sidebar-name').textContent = stored.name || 'Student';
     document.getElementById('sidebar-id').textContent = stored.email || '—';
   }
-  renderHistory();
-  renderProgress();
+  renderHistory(); renderProgress();
+  if (currentLang === 'ar') applyLang('ar');
 });
 
 function showPage(page, el) {
@@ -558,10 +749,7 @@ function removeFile() {
   checkReady();
 }
 
-function checkReady() {
-  document.getElementById('analyse-btn').disabled = !currentFile;
-}
-
+function checkReady() { document.getElementById('analyse-btn').disabled = !currentFile; }
 function formatSize(b) {
   if (b < 1024) return b + ' B';
   if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
@@ -572,10 +760,8 @@ async function startAnalysis() {
   if (!currentFile) return;
   const subject = document.getElementById('subject-input').value || '';
   const examType = document.getElementById('exam-type').value || 'exam';
-
   document.getElementById('upload-area').style.display = 'none';
   document.getElementById('loading-state').classList.add('visible');
-
   const steps = ['ls1','ls2','ls3','ls4','ls5'];
   for (let i = 0; i < steps.length; i++) {
     await delay(800);
@@ -585,7 +771,6 @@ async function startAnalysis() {
   await delay(800);
   document.getElementById(steps[steps.length-1]).classList.replace('active','done');
   await delay(400);
-
   let result;
   try {
     result = await callBackend(currentFile, subject, examType);
@@ -596,7 +781,6 @@ async function startAnalysis() {
     alert('Analysis failed: ' + e.message + '\n\nPlease try again.');
     return;
   }
-
   saveToSupabase(result, subject, examType);
   saveToHistory({ id: Date.now(), date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}), filename: currentFile.name, subject, examType, result });
   document.getElementById('loading-state').classList.remove('visible');
@@ -618,32 +802,36 @@ async function callBackend(file, subject, examType) {
 }
 
 function showResults(result) {
+  const ar = currentLang === 'ar';
   const rcColors = {
-    CONCEPT_ERROR:    {bg:'#fef2f2',text:'#b91c1c',border:'#fecaca'},
-    MEMORIZATION:     {bg:'#fffbeb',text:'#b45309',border:'#fde68a'},
+    CONCEPT_ERROR:{bg:'#fef2f2',text:'#b91c1c',border:'#fecaca'},
+    MEMORIZATION:{bg:'#fffbeb',text:'#b45309',border:'#fde68a'},
     APPLICATION_ERROR:{bg:'#eff6ff',text:'#1d4ed8',border:'#bfdbfe'},
-    MISREAD:          {bg:'#f5f3ff',text:'#6d28d9',border:'#ddd6fe'},
-    KNOWLEDGE_GAP:    {bg:'#fff7ed',text:'#c2410c',border:'#fed7aa'},
-    ON_TRACK:         {bg:'#f0fdf4',text:'#2d6a4f',border:'#86efac'},
+    MISREAD:{bg:'#f5f3ff',text:'#6d28d9',border:'#ddd6fe'},
+    KNOWLEDGE_GAP:{bg:'#fff7ed',text:'#c2410c',border:'#fed7aa'},
+    ON_TRACK:{bg:'#f0fdf4',text:'#2d6a4f',border:'#86efac'},
   };
   const errorColors = {concept_error:'#b91c1c',memorization:'#b45309',application_error:'#1d4ed8',misread:'#6d28d9'};
-  const errorLabels = {concept_error:'Concept Error',memorization:'Memorization',application_error:'Application Error',misread:'Misread'};
-  const errorDescs  = {concept_error:"Didn't understand the core idea",memorization:"Memorized without understanding",application_error:"Knows it but can't apply it",misread:"Misunderstood the question"};
+  const errorLabels = ar
+    ? {concept_error:'خطأ مفاهيمي',memorization:'حفظ دون فهم',application_error:'خطأ تطبيقي',misread:'سوء فهم السؤال'}
+    : {concept_error:'Concept Error',memorization:'Memorization',application_error:'Application Error',misread:'Misread'};
+  const errorDescs = ar
+    ? {concept_error:'لم يفهم الفكرة الأساسية',memorization:'حفظ دون استيعاب',application_error:'يعرفها لكن لا يطبقها',misread:'أساء فهم السؤال'}
+    : {concept_error:"Didn't understand the core idea",memorization:"Memorized without understanding",application_error:"Knows it but can't apply it",misread:"Misunderstood the question"};
   const c = rcColors[result.root_cause] || rcColors.APPLICATION_ERROR;
   const eb = result.error_breakdown || {};
   const maxError = Object.entries(eb).sort((a,b)=>b[1]-a[1])[0]?.[0] || 'concept_error';
 
   document.getElementById('results-content').innerHTML = `
     <div class="diagnosis-banner" style="background:${c.bg};border:1.5px solid ${c.border}">
-      <div class="diag-eyebrow" style="color:${c.text}">ROOT CAUSE IDENTIFIED</div>
+      <div class="diag-eyebrow" style="color:${c.text}">${ar?'تم تحديد السبب الجذري':'ROOT CAUSE IDENTIFIED'}</div>
       <div class="diag-title" style="color:${c.text}">${result.root_cause_label||''}</div>
       <div class="diag-text" style="color:${c.text}">${result.root_cause_description||''}</div>
       <div style="margin-top:12px;font-size:11px;opacity:0.6;font-family:var(--mono)">
-        ⚠ AI-generated analysis — verify with your professor for final confirmation.
+        ${ar?'⚠ تحليل ذكاء اصطناعي — تحقق مع أستاذك للتأكيد النهائي.':'⚠ AI-generated analysis — verify with your professor for final confirmation.'}
       </div>
     </div>
-
-    <div class="section-title">Error Type Breakdown</div>
+    <div class="section-title">${ar?'تحليل أنواع الأخطاء':'Error Type Breakdown'}</div>
     <div class="error-grid">
       ${Object.entries(eb).map(([k,v])=>`
         <div class="error-tile ${k===maxError?'highlight':''}">
@@ -652,8 +840,7 @@ function showResults(result) {
           <div class="error-desc">${errorDescs[k]||''}</div>
         </div>`).join('')}
     </div>
-
-    <div class="section-title">Weak Topics Identified</div>
+    <div class="section-title">${ar?'المواضيع الضعيفة':'Weak Topics Identified'}</div>
     <div class="topics-list">
       ${(result.weak_topics||[]).slice(0,3).map((t,i)=>{
         const name = typeof t==='string'?t:(t.topic||t.name||'Unknown');
@@ -668,12 +855,11 @@ function showResults(result) {
         </div>`;
       }).join('')}
     </div>
-
-    <div class="section-title">Your 4-Step Learning Plan</div>
+    <div class="section-title">${ar?'خطة التعلم من 4 خطوات':'Your 4-Step Learning Plan'}</div>
     <div class="plan-grid">
       ${(result.plan||[]).map((s,i)=>`
         <div class="plan-card" style="border-left-color:${c.text}">
-          <div class="plan-step-num">STEP ${i+1}</div>
+          <div class="plan-step-num">${ar?'خطوة':'STEP'} ${i+1}</div>
           <div class="plan-type">${s.type||''}</div>
           <div class="plan-action">${s.action||''}</div>
           <div class="plan-why">${s.why||''}</div>
@@ -702,23 +888,19 @@ function getHistory() {
 }
 
 function saveToHistory(entry) {
-  // Add timestamp
   entry.timestamp = Date.now();
-  // Save locally
   const h = getHistory();
   h.unshift(entry);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(h.slice(0,20)));
-  // Save to cloud if logged in
-  if (window._firestoreSave) {
-    window._firestoreSave(entry);
-  }
+  if (window._firestoreSave) window._firestoreSave(entry);
 }
 
 function renderHistory() {
   const history = getHistory();
   const el = document.getElementById('history-content');
+  const ar = currentLang === 'ar';
   if (!history.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><h3>No uploads yet</h3><p>Upload your first exam to see your history here.</p></div>`;
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><h3>${ar?'لا يوجد رفوعات بعد':'No uploads yet'}</h3><p>${ar?'ارفع امتحانك الأول لترى سجلك هنا.':'Upload your first exam to see your history here.'}</p></div>`;
     return;
   }
   const rcColors = {CONCEPT_ERROR:'#b91c1c',MEMORIZATION:'#b45309',APPLICATION_ERROR:'#1d4ed8',MISREAD:'#6d28d9',KNOWLEDGE_GAP:'#c2410c',ON_TRACK:'#2d6a4f'};
@@ -738,18 +920,21 @@ function renderHistory() {
 function renderProgress() {
   const history = getHistory();
   const el = document.getElementById('progress-content');
+  const ar = currentLang === 'ar';
   if (history.length < 2) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📈</div><h3>Upload at least 2 exams</h3><p>Progress comparison becomes available after your second upload.</p></div>`;
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📈</div><h3>${ar?'ارفع امتحانين على الأقل':'Upload at least 2 exams'}</h3><p>${ar?'مقارنة التقدم متاحة بعد رفعك الثاني.':'Progress comparison becomes available after your second upload.'}</p></div>`;
     return;
   }
   const latest = history[0], previous = history[1];
   const types = ['concept_error','memorization','application_error','misread'];
-  const labels = {concept_error:'Concept Error',memorization:'Memorization',application_error:'Application Error',misread:'Misread'};
+  const labels = ar
+    ? {concept_error:'خطأ مفاهيمي',memorization:'حفظ دون فهم',application_error:'خطأ تطبيقي',misread:'سوء فهم'}
+    : {concept_error:'Concept Error',memorization:'Memorization',application_error:'Application Error',misread:'Misread'};
   const colors = {concept_error:'#b91c1c',memorization:'#b45309',application_error:'#1d4ed8',misread:'#6d28d9'};
   el.innerHTML = `
     <div class="progress-card">
-      <h3>Error Type Comparison</h3>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:16px">Comparing <strong>${latest.filename}</strong> vs <strong>${previous.filename}</strong></p>
+      <h3>${ar?'مقارنة أنواع الأخطاء':'Error Type Comparison'}</h3>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:16px">${ar?'مقارنة':'Comparing'} <strong>${latest.filename}</strong> ${ar?'مع':'vs'} <strong>${previous.filename}</strong></p>
       ${types.map(k => {
         const prev = previous.result?.error_breakdown?.[k]||0;
         const curr = latest.result?.error_breakdown?.[k]||0;
@@ -760,12 +945,12 @@ function renderProgress() {
           <div class="compare-label">${labels[k]}</div>
           <div class="compare-bars">
             <div class="compare-bar-wrap">
-              <div class="compare-bar-label">Prev</div>
+              <div class="compare-bar-label">${ar?'سابق':'Prev'}</div>
               <div class="compare-track"><div class="compare-fill" style="width:${prev}%;background:${colors[k]}66"></div></div>
               <div class="compare-val">${prev}%</div>
             </div>
             <div class="compare-bar-wrap">
-              <div class="compare-bar-label">Now</div>
+              <div class="compare-bar-label">${ar?'الآن':'Now'}</div>
               <div class="compare-track"><div class="compare-fill" style="width:${curr}%;background:${colors[k]}"></div></div>
               <div class="compare-val">${curr}%</div>
             </div>
@@ -775,7 +960,7 @@ function renderProgress() {
       }).join('')}
     </div>
     <div class="progress-card">
-      <h3>Upload Timeline</h3>
+      <h3>${ar?'الجدول الزمني للرفع':'Upload Timeline'}</h3>
       ${history.slice(0,5).map(h=>`
         <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
           <div style="font-family:var(--mono);font-size:11px;color:var(--muted);width:90px">${h.date}</div>
@@ -791,7 +976,6 @@ function renderProgress() {
   }, 200);
 }
 
-  
 function resetUpload() {
   currentFile = null;
   document.getElementById('upload-area').style.display = 'block';
@@ -805,22 +989,47 @@ function resetUpload() {
   showPage('upload', document.querySelector('.nav-item'));
 }
 
-const AR = {
-  uploadExam:'رفع الامتحان', myDiagnosis:'تشخيصي', history:'السجل', progress:'التقدم',
-  uploadTitle:'ارفع امتحانك', uploadSub:'ارفع امتحانك وسيشخّص Traceback أين انهار فهمك.',
-  analyseBtn:'🔍 حلّل امتحاني', analysingTitle:'جاري تحليل امتحانك...',
-  disclaimer:'⚠ تحليل ذكاء اصطناعي — تحقق مع أستاذك للتأكيد.',
-  langLabel:'English'
+// ── LANGUAGE ──────────────────────────────────────────
+const LANG = {
+  en: {
+    navUpload:'Upload Exam', navDiagnosis:'My Diagnosis', navHistory:'History', navProgress:'Progress',
+    langLabel:'العربية',
+    eyebrowUpload:'New Analysis', titleUpload:'Upload Your Exam',
+    subUpload:'Upload your exam and Traceback will diagnose exactly where your understanding broke down.',
+    zoneTitle:'Drop your exam here', zoneSub:'or click to browse your files',
+    labelSubject:'Subject / Course', labelExamType:'Exam Type',
+    subjectPlaceholder:"Optional — we'll detect it automatically",
+    analyseBtn:'Analyse My Exam', loadingTitle:'Analysing your exam...',
+    loadingSub:'This takes about 10–15 seconds',
+    ls1:' Reading file content', ls2:' Identifying errors and mistakes',
+    ls3:' Classifying error types', ls4:' Detecting weak topics', ls5:' Building your learning plan',
+    eyebrowResults:'Analysis Complete', titleResults:'Your Diagnosis', newUpload:'+ New Upload',
+    eyebrowHistory:'Past Uploads', titleHistory:'Upload History',
+    subHistory:'All your previous exam analyses saved here.',
+    eyebrowProgress:'Over Time', titleProgress:'Your Progress',
+    subProgress:'See how your error patterns are changing across uploads.',
+  },
+  ar: {
+    navUpload:'رفع الامتحان', navDiagnosis:'تشخيصي', navHistory:'السجل', navProgress:'التقدم',
+    langLabel:'English',
+    eyebrowUpload:'تحليل جديد', titleUpload:'ارفع امتحانك',
+    subUpload:'ارفع امتحانك وسيشخّص Traceback بالضبط أين انهار فهمك.',
+    zoneTitle:'اسقط امتحانك هنا', zoneSub:'أو اضغط لتصفح ملفاتك',
+    labelSubject:'المادة / الكورس', labelExamType:'نوع الامتحان',
+    subjectPlaceholder:'اختياري — سنكتشفه تلقائياً',
+    analyseBtn:'حلّل امتحاني', loadingTitle:'جاري تحليل امتحانك...',
+    loadingSub:'هذا يستغرق حوالي 10-15 ثانية',
+    ls1:' قراءة محتوى الملف', ls2:' تحديد الأخطاء والغلطات',
+    ls3:' تصنيف أنواع الأخطاء', ls4:' اكتشاف المواضيع الضعيفة', ls5:' بناء خطة التعلم',
+    eyebrowResults:'اكتمل التحليل', titleResults:'تشخيصك', newUpload:'+ رفع جديد',
+    eyebrowHistory:'الرفوعات السابقة', titleHistory:'سجل الرفع',
+    subHistory:'جميع تحليلات امتحاناتك السابقة محفوظة هنا.',
+    eyebrowProgress:'عبر الزمن', titleProgress:'تقدمك',
+    subProgress:'شاهد كيف تتغير أنماط أخطائك عبر الرفوعات.',
+  }
 };
-const EN = {
-  uploadExam:'Upload Exam', myDiagnosis:'My Diagnosis', history:'History', progress:'Progress',
-  uploadTitle:'Upload Your Exam', uploadSub:'Upload your exam and Traceback will diagnose exactly where your understanding broke down.',
-  analyseBtn:'🔍 Analyse My Exam', analysingTitle:'Analysing your exam...',
-  disclaimer:'⚠ AI-generated analysis — verify with your professor for final confirmation.',
-  langLabel:'العربية'
-};
+
 let currentLang = localStorage.getItem('tb_lang') || 'en';
-if (currentLang === 'ar') applyLang('ar');
 
 function toggleLang() {
   currentLang = currentLang === 'en' ? 'ar' : 'en';
@@ -829,23 +1038,46 @@ function toggleLang() {
 }
 
 function applyLang(lang) {
+  const L = LANG[lang];
   const isAr = lang === 'ar';
-  const L = isAr ? AR : EN;
   document.documentElement.dir = isAr ? 'rtl' : 'ltr';
   document.documentElement.lang = lang;
-  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
-  set('lang-label', L.langLabel);
-  document.title = isAr ? 'تراسباك — لوحة الطالب' : 'Traceback — Student Dashboard';
+  const s = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  s('lang-label', L.langLabel);
+  s('nav-upload-label', L.navUpload);
+  s('nav-diagnosis-label', L.navDiagnosis);
+  s('nav-history-label', L.navHistory);
+  s('nav-progress-label', L.navProgress);
+  s('bn-upload-label', L.navUpload);
+  s('bn-history-label', L.navHistory);
+  s('bn-progress-label', L.navProgress);
+  s('eyebrow-upload', L.eyebrowUpload);
+  s('title-upload', L.titleUpload);
+  s('sub-upload', L.subUpload);
+  s('upload-zone-title', L.zoneTitle);
+  s('upload-zone-sub', L.zoneSub);
+  s('label-subject', L.labelSubject);
+  s('label-examtype', L.labelExamType);
+  s('analyse-btn-text', L.analyseBtn);
+  s('loading-title-text', L.loadingTitle);
+  s('loading-sub-text', L.loadingSub);
+  s('ls1-text', L.ls1); s('ls2-text', L.ls2); s('ls3-text', L.ls3);
+  s('ls4-text', L.ls4); s('ls5-text', L.ls5);
+  s('eyebrow-results', L.eyebrowResults);
+  s('title-results', L.titleResults);
+  s('new-upload-btn', L.newUpload);
+  s('eyebrow-history', L.eyebrowHistory);
+  s('title-history', L.titleHistory);
+  s('sub-history', L.subHistory);
+  s('eyebrow-progress', L.eyebrowProgress);
+  s('title-progress', L.titleProgress);
+  s('sub-progress', L.subProgress);
   const subInput = document.getElementById('subject-input');
-  if (subInput) subInput.placeholder = isAr ? 'اختياري — سنكتشفه تلقائياً' : 'Optional — we\'ll detect it automatically';
-  // Update analyse button
-  const btn = document.getElementById('analyse-btn');
-  if (btn) btn.innerHTML = `<span>${L.analyseBtn}</span>`;
-  // Store for use in showResults
-  window._lang = lang;
-  window._L = L;
+  if (subInput) subInput.placeholder = L.subjectPlaceholder;
+  document.title = isAr ? 'تراسباك — لوحة الطالب' : 'Traceback — Student Dashboard';
+  renderHistory(); renderProgress();
 }
-
 </script>
-</body>
-</html>
+
+
+</body></html>
