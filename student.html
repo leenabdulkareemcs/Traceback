@@ -771,26 +771,6 @@ function renderProgress() {
   }, 200);
 }
 
-  let currentLang = localStorage.getItem('tb_lang') || 'en';
-if (currentLang === 'ar') {
-  document.documentElement.dir = 'rtl';
-  document.documentElement.lang = 'ar';
-  setTimeout(() => { const el = document.getElementById('lang-label'); if(el) el.textContent = 'English'; }, 100);
-}
-
-function toggleLang() {
-  currentLang = currentLang === 'en' ? 'ar' : 'en';
-  localStorage.setItem('tb_lang', currentLang);
-  const isAr = currentLang === 'ar';
-  document.documentElement.dir = isAr ? 'rtl' : 'ltr';
-  document.documentElement.lang = currentLang;
-  const el = document.getElementById('lang-label');
-  if (el) el.textContent = isAr ? 'English' : 'العربية';
-  const subInput = document.getElementById('subject-input');
-  if (subInput) subInput.placeholder = isAr ? 'اختياري — سنكتشفه تلقائياً' : 'Optional — we\'ll detect it automatically';
-  const btn = document.getElementById('analyse-btn');
-  if (btn) btn.innerHTML = isAr ? '<span>🔍</span><span>حلّل امتحاني</span>' : '<span>🔍</span><span>Analyse My Exam</span>';
-}
   
 function resetUpload() {
   currentFile = null;
