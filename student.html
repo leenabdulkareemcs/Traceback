@@ -802,6 +802,7 @@ async function callBackend(file, subject, examType) {
 }
 
 function showResults(result) {
+  window._lastResult = result;
   const ar = currentLang === 'ar';
   const rcColors = {
     CONCEPT_ERROR:{bg:'#fef2f2',text:'#b91c1c',border:'#fecaca'},
@@ -1030,11 +1031,13 @@ const LANG = {
 };
 
 let currentLang = localStorage.getItem('tb_lang') || 'en';
+  if (currentLang === 'ar') { document.documentElement.dir = 'rtl'; document.documentElement.lang = 'ar'; }
 
 function toggleLang() {
   currentLang = currentLang === 'en' ? 'ar' : 'en';
   localStorage.setItem('tb_lang', currentLang);
   applyLang(currentLang);
+  if (window._lastResult) showResults(window._lastResult);
 }
 
 function applyLang(lang) {
