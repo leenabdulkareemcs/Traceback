@@ -541,7 +541,7 @@ async function callBackend(file, subject, examType) {
   formData.append('subject', subject);
   formData.append('exam_type', examType);
   formData.append('lang', currentLang);
-  const response = await fetch('https://traceback-api.onrender.com/chat', { method: 'POST', body: formData });
+  const response = await fetch('https://traceback-api.onrender.com/analyse', { method: 'POST', body: formData });
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || 'Server error ' + response.status);
   return data;
