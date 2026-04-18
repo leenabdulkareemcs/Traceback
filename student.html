@@ -822,7 +822,8 @@ function appendMessage(role, text) {
   const el = document.getElementById('chat-messages');
   const div = document.createElement('div');
   div.className = `chat-msg ${role}`;
-  div.innerHTML = `<div class="chat-avatar">${role==='bot'?'TB':'👤'}</div><div class="chat-bubble">${text}</div>`;
+  const formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  div.innerHTML = `<div class="chat-avatar">${role==='bot'?'TB':'👤'}</div><div class="chat-bubble">${formatted}</div>`;
   el.appendChild(div);
   el.scrollTop = el.scrollHeight;
 }
